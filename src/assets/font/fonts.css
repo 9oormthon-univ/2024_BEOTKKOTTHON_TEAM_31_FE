@@ -31,3 +31,12 @@
     url('/src/assets/font/Pretendard-Bold.woff') format('woff'),
     url('/src/assets/font/Pretendard-Bold.otf') format('opentype');
 }
+
+@font-face {
+  font-family: 'NotoSansKR';
+  font-style: medium;
+  font-weight: 500;
+  src:
+    url('/src/assets/font/NotoSansKR-Medium.woff') format('woff'),
+    url('/src/assets/font/NotoSansKR-Medium.otf') format('opentype');
+}

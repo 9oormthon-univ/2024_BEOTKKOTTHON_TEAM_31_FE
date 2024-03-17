@@ -45,6 +45,9 @@ module.exports = {
         md: { min: '391px', max: '767px' },
         lg: { min: '768px' },
       },
+      fontFamily: {
+        NotoSansKR: ["NotoSansKR"]
+      }
     },
   },
   plugins: [],
