@@ -40,3 +40,10 @@
     url('/src/assets/font/NotoSansKR-Medium.woff') format('woff'),
     url('/src/assets/font/NotoSansKR-Medium.otf') format('opentype');
 }
+
+@font-face {
+  font-family: 'SongMyung';
+  font-style: Regular;
+  font-weight: 400;
+  src: url('/src/assets/font/SongMyung-Regular.otf') format('opentype');
+}

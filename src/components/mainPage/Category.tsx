@@ -1,16 +1,13 @@
 import React from 'react';
-import LanguageBox from './Categories/LanguageBox';
-import MathBox from './Categories/MathBox';
-import ReasoningBox from './Categories/ReasoningBox';
-import SpaceBox from './Categories/SpaceBox';
+import CategoryBox from './CategoryBox';
 
 const Category = () => {
   return (
     <div className="relative mx-4 mb-5 flex h-auto w-full flex-col gap-y-4">
-      <LanguageBox />
-      <MathBox />
-      <ReasoningBox />
-      <SpaceBox />
+      <CategoryBox type={0} />
+      <CategoryBox type={1} />
+      <CategoryBox type={2} />
+      <CategoryBox type={3} />
     </div>
   );
 };
