@@ -46,8 +46,8 @@ module.exports = {
         lg: { min: '768px' },
       },
       fontFamily: {
-        NotoSansKR: ["NotoSansKR"]
-      }
+        NotoSansKR: ['NotoSansKR'],
+      },
     },
   },
   plugins: [],
