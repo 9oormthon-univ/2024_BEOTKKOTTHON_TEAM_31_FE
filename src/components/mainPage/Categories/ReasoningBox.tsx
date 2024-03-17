@@ -5,12 +5,12 @@ import { ReactComponent as StartBtn } from '../../../assets/illust/illust_start_
 function ReasoningBox() {
   return (
     <div className="relative flex h-[144px] w-full overflow-hidden rounded-8 border border-sub_200">
-      <div className=" basis-1/3 items-center justify-center bg-sub_200 ">
+      <div className="flex shrink-0 basis-1/3 items-center justify-center bg-sub_200 ">
         <Reasoning className="h-auto w-auto" />
       </div>
-      <div className="border-2 border-yellow-500">
-        <div className="mx-6 mt-6 flex justify-between border-2 border-blue-500">
-          <div className="border-2 border-red-500 text-gray_600">
+      <div className="flex grow flex-col items-start px-4 py-6">
+        <div className="flex w-full justify-start">
+          <div className="grow text-gray_600">
             <div className="mb-4 text-16 font-bold leading-none">추리영역</div>
             <div className="leading-4">
               <div className="text-12 font-medium ">영역 목표</div>
@@ -19,9 +19,9 @@ function ReasoningBox() {
               </div>
             </div>
           </div>
-          <StartBtn className="w-[32px] shrink-0 border-2 border-red-500" />
+          <StartBtn className="w-[32px] shrink-0" />
         </div>
-        <div className="mx-4 mb-[23px] mt-2 box-border flex w-full justify-start gap-x-2 leading-none ">
+        <div className="mb-[23px] mt-2 box-border flex w-full justify-start gap-x-2 leading-none ">
           <div className="flex items-center rounded-12 bg-sub_300 px-3 py-[7px] text-center text-10 font-medium text-white ">
             논리 추리
           </div>
