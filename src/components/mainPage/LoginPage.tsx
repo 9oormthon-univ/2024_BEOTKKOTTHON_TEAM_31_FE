@@ -38,7 +38,7 @@ const LoginPage = () => {
           </div>
         </div>
       </div>
-      <div className="mb-6 mt-6 w-full">
+      <div className="mt-6 w-full">
         <div className="mx-4 flex flex-row justify-between gap-4">
           <div className="relative flex h-[171px] w-full items-center justify-center rounded-[4px] border-[1px] border-sub_200">
             <div className="z-0 flex flex-col items-center justify-center gap-y-4 whitespace-pre text-wrap text-center">
