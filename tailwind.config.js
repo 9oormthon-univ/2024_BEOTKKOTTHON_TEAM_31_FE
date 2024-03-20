@@ -27,9 +27,9 @@ module.exports = {
         gray_200: '#EBEDF8',
         gray_100: '#F6F7FE',
         white: '#FFFFFF',
-        error: '#FF5151',
+        wrong: '#FF5151',
         warning: '#FFCE4F',
-        success: '#80F756',
+        success: '#2AE45E',
         safety: '#459FF3',
       },
       margin: {
@@ -44,9 +44,6 @@ module.exports = {
         sm: { min: '250px', max: '390px' },
         md: { min: '391px', max: '767px' },
         lg: { min: '768px' },
-      },
-      fontFamily: {
-        noto_sans: ['NotoSansKR'],
       },
     },
   },

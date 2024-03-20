@@ -7,12 +7,13 @@ import { useEffect, useState } from 'react';
 import Footer from '../common/Footer';
 import { ReactComponent as PrevBtn } from '../../assets/illust/illust_prev_btn.svg';
 import { ReactComponent as HomeBtn } from '../../assets/illust/illust_home_btn.svg';
-import AbledButton_sm from '../common/AbledButton_sm';
-import DisabledButton_sm from '../common/DisabledButton_sm';
+import CorrectButton from '../common/CorrectButton';
+import WrongButton from '../common/WrongButton';
 
-const Question = () => {
+const Answer = () => {
   const [currentQuiz, setCurrentQuiz] = useState(0);
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
+  const userAnswer = 1;
   const ArrTest = [
     {
       domain: '언어영역',
@@ -98,9 +99,7 @@ const Question = () => {
       <div className="flex w-full flex-col items-center justify-start rounded-b-12 bg-main px-[16px] pb-[120px] pt-[24px]">
         <div className="flex w-full items-center justify-between">
           <PrevBtn className="shrink-0 cursor-pointer" onClick={() => {}} />
-          <p className="text-white text-16 font-extrabold pl-[10px]">
-            {ArrTest[currentQuiz].questionNum} of {ArrTest.length}
-          </p>
+          <p className="text-white text-16 font-extrabold pl-[10px]">{ArrTest[currentQuiz].questionNum}번 해설</p>
           <HomeBtn className="shrink-0 cursor-pointer" onClick={() => {}} />
         </div>
         <div className="w-full mt-6">
@@ -113,20 +112,20 @@ const Question = () => {
         </div>
       </div>
       {/* 문제 박스 영역 */}
-      <div className="w-full h-auto relative" style={{ boxShadow: '2px 4px 10px 0px rgba(72, 74, 100, 0.10)' }}>
+      <div className="w-full h-auto relative">
         <div className="mx-4 -mt-[90px] h-auto bg-white flex flex-col justify-center overflow-hidden rounded-12 border-[1px] border-sub_200">
           {/* 문제 헤더 */}
           <div className="w-full flex items-start mt-6 mb-0 pr-6 pl-4 justify-between">
             <div className="text-14 font-semibold text-gray_400 leading-none">{ArrTest[currentQuiz].domain}</div>
-            {clickedIndex !== null ? (
-              <AbledButton_sm text="해당 문제 채점" onClick={() => {}} />
+            {userAnswer === ArrTest[currentQuiz].answer ? (
+              <CorrectButton text="정답입니다" />
             ) : (
-              <DisabledButton_sm text="해당 문제 채점" />
+              <WrongButton text="오답입니다" />
             )}
           </div>
           {/* 문제 설명 */}
           <div className="flex w-full flex-col mt-0 pl-4 leading-none">
-            <div className="text-20 font-semibold text-main">Q{ArrTest[currentQuiz].questionNum}.</div>
+            <div className="text-20 font-semibold text-main">Answer {ArrTest[currentQuiz].questionNum}.</div>
             <div className="text-16 font-semibold text-gray_600 mt-2 pl-[2px]">{ArrTest[currentQuiz].question}</div>
           </div>
           {/* 구체적인 문제 */}
@@ -141,10 +140,16 @@ const Question = () => {
               {ArrTest[currentQuiz].selection.map((item, index) => (
                 <div
                   key={index}
-                  className={`flex justify-center w-full h-12 items-center rounded-[10px] cursor-pointer ${
-                    clickedIndex === index
-                      ? 'bg-main text-14 font-semibold text-white'
-                      : 'bg-gray-200 text-14 font-semibold text-gray-600'
+                  className={`flex justify-center w-full h-12 items-center rounded-[10px] ${
+                    userAnswer === ArrTest[currentQuiz].answer
+                      ? ArrTest[currentQuiz].answer - 1 === index
+                        ? 'bg-success text-14 font-semibold text-white'
+                        : 'bg-gray-200 text-14 font-semibold text-gray-600'
+                      : userAnswer - 1 === index
+                        ? 'bg-wrong text-14 font-semibold text-white'
+                        : 'bg-gray-200 text-14 font-semibold text-gray-600' && ArrTest[currentQuiz].answer - 1 === index
+                          ? 'bg-success text-14 font-semibold text-white'
+                          : 'bg-gray-200 text-14 font-semibold text-gray-600'
                   }`}
                   onClick={() => handleToggle(index)}
                 >
@@ -172,23 +177,47 @@ const Question = () => {
             style={{ boxShadow: '2px 4px 10px 0px rgba(72, 74, 100, 0.10)' }}
           ></div>
         </div>
-        {/* 이전, 다음 문제 버튼 */}
+        {/* 해설 */}
         <div className="w-full mt-6">
+          <div className="flex justify-between items-center mx-8">
+            {userAnswer === ArrTest[currentQuiz].answer ? (
+              <>
+                <div className="text-gray_400 text-12 font-light">
+                  {ArrTest[currentQuiz].count}명 중 {ArrTest[currentQuiz].correctCount}명이 맞췄어요 😊
+                </div>
+                <div className="text-gray_300 text-10 font-light">
+                  정답률 {(ArrTest[currentQuiz].correctCount / ArrTest[currentQuiz].count) * 100}%
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="text-gray_400 text-12 font-light">
+                  {ArrTest[currentQuiz].count}명 중 {ArrTest[currentQuiz].wrongCount}명이 틀렸어요 🥲
+                </div>
+                <div className="text-gray_300 text-10 font-light">
+                  오답률 {(ArrTest[currentQuiz].wrongCount / ArrTest[currentQuiz].count) * 100}%
+                </div>
+              </>
+            )}
+          </div>
+          <div className="flex mx-8 mt-2 border-[1px] border-gray_300 rounded-8 bg-gray_200">
+            <div className="px-6 py-6 flex-col">
+              <div className="text-[13px] text-gray_600 font-semibold">해설</div>
+              <div className="leading-6 text-[13px] text-gray_400 font-normal">{ArrTest[currentQuiz].explanation}</div>
+            </div>
+          </div>
+        </div>
+        {/* 이전, 다음 문제 버튼 */}
+        <div className="w-full mt-6 py-6">
           <div className="mx-4 flex justify-between gap-x-4">
             {currentQuiz === 0 ? (
               <>
-                {clickedIndex !== null ? (
-                  <div
-                    className="w-full h-[50px] border-[1px] border-main flex justify-center items-center rounded-8 text-white text-16 font-bold bg-main cursor-pointer"
-                    onClick={() => setCurrentQuiz(currentQuiz + 1)}
-                  >
-                    다음 문제
-                  </div>
-                ) : (
-                  <div className="w-full h-[50px] border-[1px] border-sun_100 flex justify-center items-center rounded-8 text-white text-16 font-bold bg-sub_100">
-                    다음 문제
-                  </div>
-                )}
+                <div
+                  className="w-full h-[50px] border-[1px] border-main flex justify-center items-center rounded-8 text-white text-16 font-bold bg-main cursor-pointer"
+                  onClick={() => setCurrentQuiz(currentQuiz + 1)}
+                >
+                  다음 문제
+                </div>
               </>
             ) : currentQuiz > 1 && currentQuiz < ArrTest.length ? (
               <>
@@ -239,4 +268,4 @@ const Question = () => {
   );
 };
 
-export default Question;
+export default Answer;

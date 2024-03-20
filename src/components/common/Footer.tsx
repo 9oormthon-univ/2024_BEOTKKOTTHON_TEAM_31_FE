@@ -3,7 +3,7 @@ import { ReactComponent as Github } from '../../assets/illust/illust_github.svg'
 const Footer = () => {
   return (
     <>
-      <div className="w-full">
+      <div className="w-full mt-6">
         <div className="mx-5 border-[1px] border-gray_300 opacity-50"></div>
       </div>
       <div className="mb-6 w-full">
