@@ -24,7 +24,7 @@ const LogoutPage = () => {
   }, [slideIndex]);
 
   return (
-    <div className="relative flex h-full w-full flex-col items-center justify-start overflow-hidden">
+    <div className="relative flex h-screen w-full flex-col items-center justify-start overflow-hidden">
       <div className="flex w-full flex-col items-center justify-start rounded-b-12 bg-main px-[30px] pb-[50px] pt-[24px]">
         <div className="mt-[24px] flex w-full items-center justify-center px-[38px]">
           <Logo className="h-auto w-full" />

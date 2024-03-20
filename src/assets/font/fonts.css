@@ -9,6 +9,7 @@
 
 @font-face {
   font-family: 'Pretendard';
+  font-style: medium;
   font-weight: 500;
   src:
     url('/src/assets/font/Pretendard-Medium.woff') format('woff'),
@@ -17,6 +18,7 @@
 
 @font-face {
   font-family: 'Pretendard';
+  font-style: semiBold;
   font-weight: 600;
   src:
     url('/src/assets/font/Pretendard-SemiBold.woff') format('woff'),
@@ -30,6 +32,15 @@
   src:
     url('/src/assets/font/Pretendard-Bold.woff') format('woff'),
     url('/src/assets/font/Pretendard-Bold.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-style: ExtraBold;
+  font-weight: 800;
+  src:
+    url('/src/assets/font/Pretendard-ExtraBold.woff') format('woff'),
+    url('/src/assets/font/Pretendard-ExtraBold.otf') format('opentype');
 }
 
 @font-face {
