@@ -2,16 +2,29 @@
 module.exports = {
   content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
+    borderRadius: {
+      none: '0',
+      sm: '0.125rem',
+      DEFAULT: '0.25rem',
+      md: '0.375rem',
+      lg: '0.5rem',
+      lgx: '0.625rem',
+      xl: '0.75rem',
+      '2xl': '1rem',
+      '3xl': '1.5rem',
+      full: '9999px',
+      large: '12px',
+    },
     extend: {
       fontSize: {
-        10: '10px',
-        12: '12px',
-        14: '14px',
-        16: '16px',
-        18: '18px',
-        20: '20px',
-        22: '22px',
-        24: '24px',
+        10: '0.625rem',
+        12: '0.75rem',
+        14: '0.875rem',
+        16: '1rem',
+        18: '1.125rem',
+        20: '1.25rem',
+        22: '1.375rem',
+        24: '1.5rem',
       },
       colors: {
         main: '#8636F2',
