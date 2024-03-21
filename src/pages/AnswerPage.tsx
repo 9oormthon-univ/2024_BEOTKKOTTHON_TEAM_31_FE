@@ -3,15 +3,21 @@ import num2 from '../assets/illust/illust_num2.svg';
 import num3 from '../assets/illust/illust_num3.svg';
 import num4 from '../assets/illust/illust_num4.svg';
 import num5 from '../assets/illust/illust_num5.svg';
+import { ReactComponent as Num1Selection } from '../assets/illust/illust_num1_selection.svg';
+import { ReactComponent as Num2Selection } from '../assets/illust/illust_num2_selection.svg';
+import { ReactComponent as Num3Selection } from '../assets/illust/illust_num3_selection.svg';
+import { ReactComponent as Num4Selection } from '../assets/illust/illust_num4_selection.svg';
+import { ReactComponent as Num5Selection } from '../assets/illust/illust_num5_selection.svg';
 import { useEffect, useState } from 'react';
 import Footer from '../components/common/Footer';
 import { ReactComponent as PrevBtn } from '../assets/illust/illust_prev_btn.svg';
 import { ReactComponent as HomeBtn } from '../assets/illust/illust_home_btn.svg';
 import CorrectButton from '../components/common/CorrectButton';
 import WrongButton from '../components/common/WrongButton';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const AnswerPage = () => {
+  const navigate = useNavigate();
   const [currentQuiz, setCurrentQuiz] = useState(0);
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
   const userAnswer = 1;
@@ -94,14 +100,49 @@ const AnswerPage = () => {
       setClickedIndex(index);
     }
   };
+
+  const answerTag = () => {
+    if (ArrTest[currentQuiz].answer === 1) {
+      return <Num1Selection />;
+    } else if (ArrTest[currentQuiz].answer === 2) {
+      return <Num2Selection />;
+    } else if (ArrTest[currentQuiz].answer === 3) {
+      return <Num3Selection />;
+    } else if (ArrTest[currentQuiz].answer === 4) {
+      return <Num4Selection />;
+    } else {
+      return <Num5Selection />;
+    }
+  };
+  const userTag = () => {
+    if (userAnswer === 1) {
+      return <Num1Selection />;
+    } else if (userAnswer === 2) {
+      return <Num2Selection />;
+    } else if (userAnswer === 3) {
+      return <Num3Selection />;
+    } else if (userAnswer === 4) {
+      return <Num4Selection />;
+    } else {
+      return <Num5Selection />;
+    }
+  };
+
   return (
     <div className="relative flex h-full w-full flex-col items-center justify-start overflow-hidden font-family">
       {/* 헤더 */}
       <div className="flex w-full flex-col items-center justify-start rounded-b-12 bg-main px-[16px] pb-[120px] pt-[24px]">
         <div className="flex w-full items-center justify-between">
-          <PrevBtn className="shrink-0 cursor-pointer" onClick={() => {}} />
+          <PrevBtn
+            className="shrink-0 cursor-pointer"
+            onClick={() => {
+              currentQuiz === 0 ? navigate(-1) : setCurrentQuiz(currentQuiz - 1);
+            }}
+          />
           <p className="text-white text-16 font-extrabold pl-[10px]">{ArrTest[currentQuiz].questionNum}번 해설</p>
-          <HomeBtn className="shrink-0 cursor-pointer" onClick={() => {}} />
+          <Link to="/">
+            <HomeBtn className="shrink-0 cursor-pointer" />
+          </Link>
         </div>
         <div className="w-full mt-6">
           <div className="relative h-2 bg-white rounded-8 overflow-hidden">
@@ -156,7 +197,13 @@ const AnswerPage = () => {
                 >
                   <div className="flex w-full">
                     <div className="flex items-center">
-                      <img src={item.num} alt="number" className="mx-4" />
+                      {ArrTest[currentQuiz].answer - 1 === index ? (
+                        <div className="mx-4">{answerTag()}</div>
+                      ) : userAnswer === index ? (
+                        <div className="mx-4">{userTag()}</div>
+                      ) : (
+                        <img src={item.num} alt="number" className="mx-4" />
+                      )}
                     </div>
                     <div>{item.name}</div>
                   </div>
