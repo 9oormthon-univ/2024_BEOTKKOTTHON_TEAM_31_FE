@@ -6,6 +6,7 @@ import { ReactComponent as CorrectBulb } from '../../assets/illust/illust_correc
 import { ReactComponent as IncorrectBulb } from '../../assets/illust/illust_incorrect_bulb.svg';
 import Category from './Category';
 import Footer from '../common/Footer';
+import { Link } from 'react-router-dom';
 
 const LoginPage = () => {
   const Id = '벚꽃신입생';
@@ -58,7 +59,9 @@ const LoginPage = () => {
               <div className="text-12 font-medium leading-4 text-gray_600 ">
                 {`유사 문제를 통하여 지속적으로 \n문제를 연습해보세요.`}
               </div>
-              <StartBtnSqu className="w-full" />
+              <Link to="/retry">
+                <StartBtnSqu className="w-full" />
+              </Link>
             </div>
             <div className="absolute bottom-0 left-0">
               <IncorrectBulb />

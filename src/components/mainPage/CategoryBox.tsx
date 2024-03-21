@@ -5,6 +5,7 @@ import { ReactComponent as Reasoning } from '../../assets/illust/illust_reasonin
 import { ReactComponent as Space } from '../../assets/illust/illust_space.svg';
 import { ReactComponent as StartBtn } from '../../assets/illust/illust_start_btn.svg';
 import { ReactComponent as UnableStartBtn } from '../../assets/illust/illust_unable_start_btn.svg';
+import { Link } from 'react-router-dom';
 
 function CategoryBox({ type }: { type: number }) {
   const categoryType: { title: string; description: string; tags: string[] }[] = [
@@ -52,7 +53,13 @@ function CategoryBox({ type }: { type: number }) {
               <div className="whitespace-wrap text-10 font-normal">{categoryType[type].description}</div>
             </div>
           </div>
-          {type === 3 ? <UnableStartBtn className="w-[32px] shrink-0" /> : <StartBtn className="w-[32px] shrink-0" />}
+          {type === 3 ? (
+            <UnableStartBtn className="w-[32px] shrink-0" />
+          ) : (
+            <Link to="/question" className="w-[32px] shrink-0 cursor-pointer">
+              <StartBtn className="w-full h-full" />
+            </Link>
+          )}
         </div>
         <div className="mt-2 box-border flex w-full flex-wrap justify-start gap-x-2 gap-y-2 leading-none">
           {categoryType[type].tags.map((tag, index) => (

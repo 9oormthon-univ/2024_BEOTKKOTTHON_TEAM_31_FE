@@ -7,7 +7,7 @@ const TitleBar = ({ text }: { text: string }) => {
   return (
     <div className="w-full flex items-center justify-between text-white">
       <div className="h-full w-1/3 flex items-center justify-start" onClick={() => navigate(-1)}>
-        <Prev className="h-full w-auto" />
+        <Prev className="h-full w-auto cursor-pointer" />
       </div>
       <div className="text-16 font-extrabold">{text}</div>
       <div className="w-1/3"></div>

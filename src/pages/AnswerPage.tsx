@@ -1,16 +1,17 @@
-import num1 from '../../assets/illust/illust_num1.svg';
-import num2 from '../../assets/illust/illust_num2.svg';
-import num3 from '../../assets/illust/illust_num3.svg';
-import num4 from '../../assets/illust/illust_num4.svg';
-import num5 from '../../assets/illust/illust_num5.svg';
+import num1 from '../assets/illust/illust_num1.svg';
+import num2 from '../assets/illust/illust_num2.svg';
+import num3 from '../assets/illust/illust_num3.svg';
+import num4 from '../assets/illust/illust_num4.svg';
+import num5 from '../assets/illust/illust_num5.svg';
 import { useEffect, useState } from 'react';
-import Footer from '../common/Footer';
-import { ReactComponent as PrevBtn } from '../../assets/illust/illust_prev_btn.svg';
-import { ReactComponent as HomeBtn } from '../../assets/illust/illust_home_btn.svg';
-import CorrectButton from '../common/CorrectButton';
-import WrongButton from '../common/WrongButton';
+import Footer from '../components/common/Footer';
+import { ReactComponent as PrevBtn } from '../assets/illust/illust_prev_btn.svg';
+import { ReactComponent as HomeBtn } from '../assets/illust/illust_home_btn.svg';
+import CorrectButton from '../components/common/CorrectButton';
+import WrongButton from '../components/common/WrongButton';
+import { Link } from 'react-router-dom';
 
-const Answer = () => {
+const AnswerPage = () => {
   const [currentQuiz, setCurrentQuiz] = useState(0);
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
   const userAnswer = 1;
@@ -212,12 +213,12 @@ const Answer = () => {
           <div className="mx-4 flex justify-between gap-x-4">
             {currentQuiz === 0 ? (
               <>
-                <div
+                <Link
+                  to="/question"
                   className="w-full h-[50px] border-[1px] border-main flex justify-center items-center rounded-8 text-white text-16 font-bold bg-main cursor-pointer"
-                  onClick={() => setCurrentQuiz(currentQuiz + 1)}
                 >
                   다음 문제
-                </div>
+                </Link>
               </>
             ) : currentQuiz > 1 && currentQuiz < ArrTest.length ? (
               <>
@@ -268,4 +269,4 @@ const Answer = () => {
   );
 };
 
-export default Answer;
+export default AnswerPage;

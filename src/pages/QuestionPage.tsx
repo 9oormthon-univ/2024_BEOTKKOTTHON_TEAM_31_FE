@@ -1,17 +1,21 @@
-import num1 from '../../assets/illust/illust_num1.svg';
-import num2 from '../../assets/illust/illust_num2.svg';
-import num3 from '../../assets/illust/illust_num3.svg';
-import num4 from '../../assets/illust/illust_num4.svg';
-import num5 from '../../assets/illust/illust_num5.svg';
+import num1 from '../assets/illust/illust_num1.svg';
+import num2 from '../assets/illust/illust_num2.svg';
+import num3 from '../assets/illust/illust_num3.svg';
+import num4 from '../assets/illust/illust_num4.svg';
+import num5 from '../assets/illust/illust_num5.svg';
+import { ReactComponent as Num1Selection } from '../assets/illust/illust_num1_selection.svg';
+import { ReactComponent as Num3Selection } from '../assets/illust/illust_num3_selection.svg';
 import { useEffect, useState } from 'react';
-import Footer from '../common/Footer';
-import { ReactComponent as PrevBtn } from '../../assets/illust/illust_prev_btn.svg';
-import { ReactComponent as HomeBtn } from '../../assets/illust/illust_home_btn.svg';
-import AbledButton_sm from '../common/AbledButton_sm';
-import DisabledButton_sm from '../common/DisabledButton_sm';
+import Footer from '../components/common/Footer';
+import { ReactComponent as PrevBtn } from '../assets/illust/illust_prev_btn.svg';
+import { ReactComponent as HomeBtn } from '../assets/illust/illust_home_btn.svg';
+import AbledButton_sm from '../components/common/AbledButton_sm';
+import DisabledButton_sm from '../components/common/DisabledButton_sm';
+import { Link, useNavigate } from 'react-router-dom';
 
-const Question = () => {
+const QuestionPage = () => {
   const [currentQuiz, setCurrentQuiz] = useState(0);
+  const navigate = useNavigate();
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
   const ArrTest = [
     {
@@ -97,11 +101,18 @@ const Question = () => {
       {/* 헤더 */}
       <div className="flex w-full flex-col items-center justify-start rounded-b-12 bg-main px-[16px] pb-[120px] pt-[24px]">
         <div className="flex w-full items-center justify-between">
-          <PrevBtn className="shrink-0 cursor-pointer" onClick={() => {}} />
+          <PrevBtn
+            className="shrink-0 cursor-pointer"
+            onClick={() => {
+              currentQuiz === 0 ? navigate(-1) : setCurrentQuiz(currentQuiz - 1);
+            }}
+          />
           <p className="text-white text-16 font-extrabold pl-[10px]">
             {ArrTest[currentQuiz].questionNum} of {ArrTest.length}
           </p>
-          <HomeBtn className="shrink-0 cursor-pointer" onClick={() => {}} />
+          <Link to="/">
+            <HomeBtn className="shrink-0 cursor-pointer" />
+          </Link>
         </div>
         <div className="w-full mt-6">
           <div className="relative h-2 bg-white rounded-8 overflow-hidden">
@@ -119,7 +130,9 @@ const Question = () => {
           <div className="w-full flex items-start mt-6 mb-0 pr-6 pl-4 justify-between">
             <div className="text-14 font-semibold text-gray_400 leading-none">{ArrTest[currentQuiz].domain}</div>
             {clickedIndex !== null ? (
-              <AbledButton_sm text="해당 문제 채점" onClick={() => {}} />
+              <Link to="/answer">
+                <AbledButton_sm text="해당 문제 채점" onClick={() => {}} />
+              </Link>
             ) : (
               <DisabledButton_sm text="해당 문제 채점" />
             )}
@@ -150,7 +163,15 @@ const Question = () => {
                 >
                   <div className="flex w-full">
                     <div className="flex items-center">
-                      <img src={item.num} alt="number" className="mx-4" />
+                      {clickedIndex === index ? (
+                        clickedIndex === 0 ? (
+                          <Num1Selection className="mx-4" />
+                        ) : (
+                          <Num3Selection className="mx-4" />
+                        )
+                      ) : (
+                        <img src={item.num} alt="number" className="mx-4" />
+                      )}
                     </div>
                     <div>{item.name}</div>
                   </div>
@@ -220,9 +241,12 @@ const Question = () => {
                   이전 문제
                 </div>
                 {clickedIndex !== null ? (
-                  <div className="w-full h-[50px] border-[1px] border-main flex justify-center items-center rounded-8 text-white text-16 font-bold bg-main cursor-pointer">
+                  <Link
+                    to="/result"
+                    className="w-full h-[50px] border-[1px] border-main flex justify-center items-center rounded-8 text-white text-16 font-bold bg-main cursor-pointer"
+                  >
                     최종 제출
-                  </div>
+                  </Link>
                 ) : (
                   <div className="w-full h-[50px] border-[1px] border-sun_100 flex justify-center items-center rounded-8 text-white text-16 font-bold bg-sub_100">
                     최종 제출
@@ -239,4 +263,4 @@ const Question = () => {
   );
 };
 
-export default Question;
+export default QuestionPage;
