@@ -15,11 +15,14 @@ const WrongQuestion = ({ id, title }: { id: number; title: string }) => {
         </Link>
       </div>
       <div className="w-full flex items-center justify-center gap-x-6">
-        <div className="grow flex items-center justify-center rounded-2xl bg-main text-white font-semibold text-12 py-[9px]">
-          유사문제 풀기
-        </div>
         <Link
-          to="/similarquestion"
+          to="/similar-question"
+          className="grow flex items-center justify-center rounded-2xl bg-main text-white font-semibold text-12 py-[9px]"
+        >
+          유사문제 풀기
+        </Link>
+        <Link
+          to="/similar"
           className="grow flex items-center justify-center rounded-2xl bg-main text-white font-semibold text-12 py-[9px]"
         >
           풀었던 유사문제

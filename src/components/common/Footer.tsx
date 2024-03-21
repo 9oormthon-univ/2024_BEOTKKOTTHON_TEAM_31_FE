@@ -10,7 +10,10 @@ const Footer = () => {
         <div className="relative mx-5 flex h-[104.5px] items-center justify-start whitespace-pre text-wrap font-[SongMyung] text-12 font-medium leading-[21px] text-gray_400 ">
           {`@BRAINSNACK. All rights Reserved. \n구름톤 유니브. 벚꽃톤 팀 “BRAINSNACK”`}
           <div className="absolute bottom-0 left-0">
-            <Github />
+            <Github
+              className="cursor-pointer"
+              onClick={() => window.open('https://github.com/goormthon-Univ/2024_BEOTKKOTTHON_TEAM_31_FE')}
+            />
           </div>
         </div>
       </div>

@@ -4,7 +4,10 @@ import num3 from '../assets/illust/illust_num3.svg';
 import num4 from '../assets/illust/illust_num4.svg';
 import num5 from '../assets/illust/illust_num5.svg';
 import { ReactComponent as Num1Selection } from '../assets/illust/illust_num1_selection.svg';
+import { ReactComponent as Num2Selection } from '../assets/illust/illust_num2_selection.svg';
 import { ReactComponent as Num3Selection } from '../assets/illust/illust_num3_selection.svg';
+import { ReactComponent as Num4Selection } from '../assets/illust/illust_num4_selection.svg';
+import { ReactComponent as Num5Selection } from '../assets/illust/illust_num5_selection.svg';
 import { useEffect, useState } from 'react';
 import Footer from '../components/common/Footer';
 import { ReactComponent as PrevBtn } from '../assets/illust/illust_prev_btn.svg';
@@ -131,7 +134,7 @@ const QuestionPage = () => {
             <div className="text-14 font-semibold text-gray_400 leading-none">{ArrTest[currentQuiz].domain}</div>
             {clickedIndex !== null ? (
               <Link to="/answer">
-                <AbledButton_sm text="해당 문제 채점" onClick={() => {}} />
+                <AbledButton_sm text="해당 문제 채점" onClick={() => navigate(`/answer/${clickedIndex}`)} />
               </Link>
             ) : (
               <DisabledButton_sm text="해당 문제 채점" />
@@ -166,8 +169,14 @@ const QuestionPage = () => {
                       {clickedIndex === index ? (
                         clickedIndex === 0 ? (
                           <Num1Selection className="mx-4" />
-                        ) : (
+                        ) : clickedIndex === 1 ? (
+                          <Num2Selection className="mx-4" />
+                        ) : clickedIndex === 2 ? (
                           <Num3Selection className="mx-4" />
+                        ) : clickedIndex === 3 ? (
+                          <Num4Selection className="mx-4" />
+                        ) : (
+                          <Num5Selection className="mx-4" />
                         )
                       ) : (
                         <img src={item.num} alt="number" className="mx-4" />
