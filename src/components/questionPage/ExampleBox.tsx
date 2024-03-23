@@ -5,7 +5,7 @@ const ExampleBox = ({ text }: { text: string }) => {
     const arr = str.split('*');
 
     if (arr.length === 1) {
-      return <div>{arr[0]}</div>;
+      return <div className="w-full flex items-center justify-center flex-wrap">{arr[0]}</div>;
     } else {
       const content = arr.map((item, index) => {
         if (index % 2 === 0) {
@@ -24,7 +24,7 @@ const ExampleBox = ({ text }: { text: string }) => {
         }
       });
 
-      return <div>{content}</div>;
+      return <div className="w-full flex items-center justify-center flex-wrap">{content}</div>;
     }
   };
 

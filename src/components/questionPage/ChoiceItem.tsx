@@ -54,26 +54,26 @@ const ChoiceItem = ({
     >
       {isSelected ? (
         order === 1 ? (
-          <Num1Selection className="w-4 h-auto" />
+          <Num1Selection className="w-4 h-auto shrink-0" />
         ) : order === 2 ? (
-          <Num2Selection className="w-4 h-auto" />
+          <Num2Selection className="w-4 h-auto shrink-0" />
         ) : order === 3 ? (
-          <Num3Selection className="w-4 h-auto" />
+          <Num3Selection className="w-4 h-auto shrink-0" />
         ) : order === 4 ? (
-          <Num4Selection className="w-4 h-auto" />
+          <Num4Selection className="w-4 h-auto shrink-0" />
         ) : (
-          <Num5Selection className="w-4 h-auto" />
+          <Num5Selection className="w-4 h-auto shrink-0" />
         )
       ) : order === 1 ? (
-        <Num1 className="w-4 h-auto" />
+        <Num1 className="w-4 h-auto shrink-0" />
       ) : order === 2 ? (
-        <Num2 className="w-4 h-auto" />
+        <Num2 className="w-4 h-auto shrink-0" />
       ) : order === 3 ? (
-        <Num3 className="w-4 h-auto" />
+        <Num3 className="w-4 h-auto shrink-0" />
       ) : order === 4 ? (
-        <Num4 className="w-4 h-auto" />
+        <Num4 className="w-4 h-auto shrink-0" />
       ) : (
-        <Num5 className="w-4 h-auto" />
+        <Num5 className="w-4 h-auto shrink-0" />
       )}
       {makeUnderline(text)}
     </div>

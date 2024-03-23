@@ -23,30 +23,30 @@ const CategorySquare = ({
       className={`grow flex flex-col items-center justify-center gap-y-2.5 px-5 py-4 rounded-lg text-12 font-bold cursor-pointer ${category === 'SPATIAL' ? 'cursor-not-allowed bg-sub_100 text-white' : isClicked ? 'bg-main text-white' : 'bg-sub_100 text-main'}`}
       onClick={onClick}
     >
-      <div className="w-full px-4 flex items-center justify-center grow">
+      <div className="shrink-0 w-full flex items-center justify-center grow">
         {category === 'LANG' ? (
           isClicked ? (
-            <LanguageWhite className="w-full h-auto" />
+            <LanguageWhite className="lg:w-[70px] md:w-[50px] sm:w-[40px] h-auto" />
           ) : (
-            <Language className="w-full h-auto" />
+            <Language className="lg:w-[70px] md:w-[50px] sm:w-[40px] h-auto" />
           )
         ) : category === 'MATH' ? (
           isClicked ? (
-            <MathWjote className="w-full h-auto" />
+            <MathWjote className="lg:w-[70px] md:w-[50px] sm:w-[40px] h-auto" />
           ) : (
-            <Math className="w-full h-auto" />
+            <Math className="lg:w-[70px] md:w-[50px] sm:w-[40px] h-auto" />
           )
         ) : category === 'DEDUCE' ? (
           isClicked ? (
-            <ReasoningWjote className="w-full h-auto" />
+            <ReasoningWjote className="lg:w-[70px] md:w-[50px] sm:w-[40px] h-auto" />
           ) : (
-            <Reasoning className="w-full h-auto" />
+            <Reasoning className="lg:w-[70px] md:w-[50px] sm:w-[40px] h-auto" />
           )
         ) : (
-          <SpaceWhite className="w-full h-auto" />
+          <SpaceWhite className="lg:w-[70px] md:w-[50px] sm:w-[40px] h-auto" />
         )}
       </div>
-      <div className="shrink-0">
+      <div className="shrink-0 sm:text-8">
         {category === 'LANG' ? '언어' : category === 'MATH' ? '수리' : category === 'DEDUCE' ? '추리' : '공간지각'}
         영역
       </div>
