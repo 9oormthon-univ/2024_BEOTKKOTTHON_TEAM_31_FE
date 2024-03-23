@@ -1,34 +1,72 @@
 import { useEffect, useState } from 'react';
-// import Footer from '../components/common/Footer';
 import { useLocation, useNavigate } from 'react-router-dom';
-// import TitleBar from '../components/common/TitleBar';
-// import QuizBox from '../components/questionPage/QuizBox';
-import { CategoryType, GradeRequestItemType, QuizType } from '../data/type';
-// import PrimaryButton from '../components/questionPage/PrimaryButton';
-// import StrokeButton from '../components/questionPage/StrokeButton';
-// import { useQuery } from 'react-query';
-// import { getQuizListApi } from '../api/quizApi';
-import { categoryEngToKor, dummyQuestion } from '../data/variable';
+import { CategoryType, QuizAnswerType, QuizType } from '../data/type';
+import { categoryEngToKor } from '../data/variable';
 import TitleBar from '../components/common/TitleBar';
 import QuizBox from '../components/questionPage/QuizBox';
 import PrimaryButton from '../components/questionPage/PrimaryButton';
 import Footer from '../components/common/Footer';
 import Popup from '../components/similarPage/Popup';
+import { useQuery } from 'react-query';
+import { getSimilarSingleQuizApi } from '../api/similarApi';
 
 const SimilarPage = () => {
   const navigate = useNavigate();
-  const { category } = useLocation().state as { category: string };
+  const { category, id } = useLocation().state as { category: string; id: number };
   const [realCategory, setRealCategory] = useState<CategoryType>('LANG');
   const [similarQuiz, setSimilarQuiz] = useState<QuizType | null>(null);
+  const [quizAnswer, setQuizAnswer] = useState<QuizAnswerType | null>(null);
   const [currentSelectedNum, setCurrentSelectedNum] = useState<number | null>(null);
   const [isAbleToNext, setIsAbleToNext] = useState(false);
-  // const { data, isLoading, error } = useQuery('categoryQuiz', () => getQuizListApi(category), {
-  //   onError: (error) => console.log(error),
-  // });
+  const [popupVisible, setPopupVisible] = useState(false);
+  const { data, isLoading, error, refetch } = useQuery('categoryQuiz', () => getSimilarSingleQuizApi(id), {
+    onSuccess: (data) => {
+      console.log(data);
+      if (data.data.result.answer < 1 || data.data.result.answer > 5) {
+        setPopupVisible(true);
+        return;
+      }
+
+      setSimilarQuiz({
+        id: id,
+        quizNum: data.data.result.quizNum,
+        category: data.data.result.category,
+        title: data.data.result.title,
+        choiceFirst: data.data.result.choiceFirst,
+        choiceSecond: data.data.result.choiceSecond,
+        choiceThird: data.data.result.choiceThird,
+        choiceFourth: data.data.result.choiceFourth,
+        choiceFifth: data.data.result.choiceFifth,
+        example: data.data.result.example,
+      });
+      setQuizAnswer({
+        quizNum: data.data.result.quizNum,
+        category: data.data.result.category,
+        isSimilar: true,
+        choice: 0,
+        title: data.data.result.title,
+        example: data.data.result.example,
+        choiceFirst: data.data.result.choiceFirst,
+        choiceSecond: data.data.result.choiceSecond,
+        choiceThird: data.data.result.choiceThird,
+        choiceFourth: data.data.result.choiceFourth,
+        choiceFifth: data.data.result.choiceFifth,
+        answer: data.data.result.answer,
+        solution: data.data.result.solution,
+      });
+      setPopupVisible(false);
+    },
+    onError: (error) => {
+      console.log(error);
+      setPopupVisible(true);
+    },
+    enabled: false,
+  });
 
   useEffect(() => {
-    setSimilarQuiz(dummyQuestion);
-  }, []);
+    console.log(id);
+    id && refetch();
+  }, [id]);
 
   useEffect(() => {
     setRealCategory(
@@ -36,33 +74,30 @@ const SimilarPage = () => {
     );
   }, [category]);
 
-  // useEffect(() => {
-  //   if (data) {
-  //     setQuizList(data.data.result.quizzes);
-  //   }
-  // }, [data]);
+  useEffect(() => {
+    if (!currentSelectedNum || !quizAnswer) return;
+    setQuizAnswer({ ...quizAnswer, choice: currentSelectedNum });
+  }, [currentSelectedNum]);
+
+  useEffect(() => {
+    console.log(similarQuiz);
+  }, [similarQuiz]);
 
   const nextHandler = () => {
     console.log('nextHandler');
-    if (similarQuiz === null || currentSelectedNum === null) return;
-    const gradeReauest: GradeRequestItemType = {
-      id: similarQuiz.quizId,
-      category: realCategory,
-      isSimilar: true,
-      choice: currentSelectedNum,
-    };
-    navigate('/similar/explain', { state: { category: realCategory, explainRequest: gradeReauest } });
+    if (similarQuiz === null || currentSelectedNum === null || quizAnswer === null) return;
+    navigate('/similar/explain', { state: { category: realCategory, baseQuizId: id, quizAnswer: quizAnswer } });
   };
 
-  if (!similarQuiz) {
-    return (
-      <div className="w-full h-full flex items-center justify-center text-20 text-black">
-        <div>로딩 중 ...</div>
-      </div>
-    );
-  }
-
-  return (
+  return isLoading ? (
+    <div className="w-full h-screen flex items-center justify-center text-20 text-black">
+      <div>로딩 중 ...</div>
+    </div>
+  ) : error ? (
+    <div className="w-full h-screen flex items-center justify-center text-20 text-black">
+      <div>에러 발생 ...</div>
+    </div>
+  ) : data && similarQuiz ? (
     <div className="relative w-full flex min-h-full flex-col items-center justify-start">
       <div className="relative w-full flex flex-col gap-y-7 bg-main rounded-b-xl px-4 pt-7 pb-32">
         <TitleBar
@@ -75,76 +110,22 @@ const SimilarPage = () => {
         <QuizBox
           quiz={similarQuiz}
           setIsAbleToNext={setIsAbleToNext}
-          type="quiz"
+          type="similar"
           setSelected={setCurrentSelectedNum}
           selected={currentSelectedNum}
         />
       </div>
-      <div className="relative w-full flex items-center justify-center">
+      <div className="relative w-full flex items-center justify-center px-4">
         <PrimaryButton text="채점하기" onClick={nextHandler} isAble={isAbleToNext} />
       </div>
       <Footer />
-      <Popup category={realCategory} />
+      <Popup isVisible={popupVisible} category={realCategory} />
+    </div>
+  ) : (
+    <div className="w-full h-screen flex items-center justify-center text-20 text-black animate-pulse">
+      <div>로딩 중 ...</div>
     </div>
   );
-
-  // return isLoading || realCategory === '' ? (
-  //   <div className="w-full h-full flex items-center justify-center text-20 text-black">
-  //     <div>로딩 중 ...</div>
-  //   </div>
-  // ) : error ? (
-  //   <div className="w-full h-full flex items-center justify-center text-20 text-black">
-  //     <div>에러 발생</div>
-  //   </div>
-  // ) : data ? (
-  //   <div className="relative w-full flex min-h-full flex-col items-center justify-start">
-  //     <div className="relative w-full flex flex-col gap-y-7 bg-main rounded-b-xl px-4 pt-7 pb-32">
-  //       <TitleBar
-  //         text={`${numberConverter(currentQuizIdx + 1)} of ${data.data.result.size}`}
-  //         isPrev={true}
-  //         isHome={true}
-  //       />
-  //       <div className="w-full mt-6">
-  //         <div className="relative h-2 bg-white rounded-lg overflow-hidden">
-  //           <div
-  //             className={`absolute top-0 left-0 h-full bg-[#80F756] rounded-2`}
-  //             style={{ width: `${((currentQuizIdx + 1) / data.data.result.size) * 100}%` }}
-  //           />
-  //         </div>
-  //       </div>
-  //     </div>
-  //     <div className="relative w-full -translate-y-24 px-4">
-  //       <QuizBox
-  //         quiz={quizList[currentQuizIdx]}
-  //         setIsAbleToNext={setIsAbleToNext}
-  //         type="quiz"
-  //         setSelected={setCurrentSelectedNum}
-  //         selected={currentSelectedNum}
-  //       />
-  //     </div>
-  //     <div className="relative w-full flex items-center justify-center px-4">
-  //       {currentQuizIdx === 0 ? (
-  //         <PrimaryButton text="다음 문제" onClick={nextWithAdded} isAble={isAbleToNext} />
-  //       ) : (
-  //         <div className="w-full flex items-center justify-center gap-x-4">
-  //           <StrokeButton
-  //             text={'이전문제'}
-  //             onClick={() => setCurrentQuizIdx(currentQuizIdx - 1)}
-  //             isAble={currentQuizIdx !== 0}
-  //           />
-  //           <PrimaryButton
-  //             text={currentQuizIdx === quizList.length - 1 ? '채점하기' : '다음 문제'}
-  //             onClick={nextWithAdded}
-  //             isAble={isAbleToNext}
-  //           />
-  //         </div>
-  //       )}
-  //     </div>
-  //     <Footer />
-  //   </div>
-  // ) : (
-  //   <div className="w-full h-full flex items-center justify-center">데이터가 없습니다.</div>
-  // );
 };
 
 export default SimilarPage;

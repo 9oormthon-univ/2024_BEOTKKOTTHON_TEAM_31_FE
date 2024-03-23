@@ -37,8 +37,8 @@ const LoginPage = () => {
         </div>
         <div className="mt-[24px] flex h-auto w-full justify-between">
           <div className="whitespace-pre text-wrap text-14 font-normal leading-6 text-white">
-            {`${nickname}은 브레인스낵과`}
-            <span className="text-16 font-bold">{`\n총 ${!data ? '0' : data.data.result.totalQuizCounts}문제를 함께 했어요`}</span>
+            {`${nickname}님은 브레인스낵과`}
+            <span className="text-16 font-bold">{`\n총 ${!data ? '100' : data.data.result.totalQuizCounts}문제를 함께 했어요`}</span>
             <div className="mt-4 whitespace-nowrap">오늘도 함께 인적성 검사를 연습해 볼까요??</div>
           </div>
           <Books className="mt-[-30px] h-auto w-[132px]" />

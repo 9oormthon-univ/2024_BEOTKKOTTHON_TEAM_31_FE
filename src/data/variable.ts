@@ -15,7 +15,7 @@ export const categoryEngToKor = {
 };
 
 export const dummyQuestion: QuizType = {
-  quizId: 1,
+  id: 1,
   quizNum: 1,
   category: 'LANG',
   title: '다음 글을 읽고, 문제를 푸세요.',
@@ -29,7 +29,7 @@ export const dummyQuestion: QuizType = {
 
 export const dummyQuestions: QuizType[] = [
   {
-    quizId: 1,
+    id: 1,
     quizNum: 1,
     category: 'LANG',
     title: '다음 글을 읽고, 문제를 푸세요.',
@@ -41,7 +41,7 @@ export const dummyQuestions: QuizType[] = [
     choiceFifth: '선택지 5',
   },
   {
-    quizId: 2,
+    id: 2,
     quizNum: 2,
     category: 'MATH',
     title: '다음 수식을 계산하세요.',
@@ -53,7 +53,7 @@ export const dummyQuestions: QuizType[] = [
     choiceFifth: '선택지 5',
   },
   {
-    quizId: 3,
+    id: 3,
     quizNum: 3,
     category: 'DEDUCE',
     title: '다음 문장이 사실인지 판단하세요.',
@@ -65,7 +65,7 @@ export const dummyQuestions: QuizType[] = [
     choiceFifth: '선택지 5',
   },
   {
-    quizId: 4,
+    id: 4,
     quizNum: 4,
     category: 'SPATIAL',
     title: '다음 그림을 보고, 문제를 푸세요.',
@@ -79,10 +79,10 @@ export const dummyQuestions: QuizType[] = [
 ];
 
 export const dummyGradeItems: GradeItemType[] = [
-  { category: 'LANG', quizId: 1, title: '문제 1', isCorrect: true },
-  { category: 'MATH', quizId: 2, title: '문제 2', isCorrect: false },
-  { category: 'DEDUCE', quizId: 3, title: '문제 3', isCorrect: true },
-  { category: 'SPATIAL', quizId: 4, title: '문제 4', isCorrect: false },
+  { id: 1, quizNum: 1, isCorrect: true },
+  { id: 2, quizNum: 2, isCorrect: false },
+  { id: 3, quizNum: 3, isCorrect: true },
+  { id: 4, quizNum: 4, isCorrect: false },
 ];
 
 export const dummyCorrectExplain = {
@@ -109,28 +109,23 @@ export const dummyIncorrectExplain = {
 
 export const dummyWrongQuizItems: WrongQuizItemType[] = [
   {
-    quizId: 2,
-    title: '2번 문제',
-    didSimilar: true,
+    id: 7,
+    quizNum: 7,
   },
   {
-    quizId: 5,
-    title: '5번 문제',
-    didSimilar: false,
+    id: 7,
+    quizNum: 7,
   },
   {
-    quizId: 6,
-    title: '6번 문제',
-    didSimilar: true,
+    id: 7,
+    quizNum: 7,
   },
   {
-    quizId: 7,
-    title: '7번 문제',
-    didSimilar: false,
+    id: 7,
+    quizNum: 7,
   },
   {
-    quizId: 9,
-    title: '9번 문제',
-    didSimilar: true,
+    id: 7,
+    quizNum: 7,
   },
 ];

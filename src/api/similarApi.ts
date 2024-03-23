@@ -1,7 +1,18 @@
+import { QuizAnswerType } from '../data/type';
 import { baseAxios } from './axiosInstance';
 
-export const getSimilarGradeApi = async (category: string, memberId: string) => {
-  console.log('category', category);
-  console.log('memberId', memberId);
-  return baseAxios.get(`/members/${memberId}/quizzes/similar/${category}/grade`);
+export const getSimilarSingleQuizApi = async (baseQuizId: number) => {
+  return baseAxios.get(`/quiz/${baseQuizId}/similar-quiz`);
+};
+
+export const postSimilarSingleGradeApi = async (memberId: string, baseQuizId: number, quizAnswer: QuizAnswerType) => {
+  return baseAxios.post(`/members/${memberId}/similar-quiz/${baseQuizId}/grade`, quizAnswer);
+};
+
+export const getMySimilarApi = async (memberId: string, baseQuizId: string, category: string) => {
+  return baseAxios.get(`/members/${memberId}/similar-quiz/${baseQuizId}/${category}`);
+};
+
+export const getSimilarSingleExplainApi = async (memberId: string, quizId: number) => {
+  return baseAxios.get(`/members/${memberId}/similar-quiz/${quizId}/answer`);
 };

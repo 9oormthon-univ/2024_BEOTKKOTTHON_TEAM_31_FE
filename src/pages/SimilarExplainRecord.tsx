@@ -1,30 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { CategoryType, QuizAnswerType, QuizType } from '../data/type';
+import { CategoryType, QuizType } from '../data/type';
 import { categoryEngToKor } from '../data/variable';
 import QuizBox from '../components/questionPage/QuizBox';
 import ExplainBox from '../components/explainPage/ExplainBox';
 import Footer from '../components/common/Footer';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import PrimaryButton from '../components/questionPage/PrimaryButton';
 import TitleBar from '../components/common/TitleBar';
-import { useMutation } from 'react-query';
-import { postSimilarSingleGradeApi } from '../api/similarApi';
+import { useQuery } from 'react-query';
+import { getSimilarSingleExplainApi } from '../api/similarApi';
 import { getMemberId } from '../api/localStorage';
 
-const SimilarExplainPage = () => {
+const SimilarExplainRecordPage = () => {
   const navigate = useNavigate();
   const memberId = getMemberId() || '';
-  const { category, baseQuizId, quizAnswer } = useLocation().state as {
-    category: string;
-    baseQuizId: number;
-    quizAnswer: QuizAnswerType;
-  };
+  const { category, id } = useParams();
   const [realCategory, setRealCategory] = useState<CategoryType>('LANG');
   const [quiz, setQuiz] = useState<QuizType | null>(null);
   const [explain, setExplain] = useState({ selected: 0, answer: 0, isCorrect: false, solution: '' });
-  const { mutate: postSimilarSingleGrade } = useMutation(
-    'postSimilarSingleGrade',
-    () => postSimilarSingleGradeApi(memberId, baseQuizId, quizAnswer),
+  const { data, isLoading, error } = useQuery(
+    'explainQuizRecord',
+    () => getSimilarSingleExplainApi(memberId, Number(id)),
     {
       onSuccess: (data) => {
         console.log(data);
@@ -59,14 +55,13 @@ const SimilarExplainPage = () => {
     );
   }, [category]);
 
-  useEffect(() => {
-    if (!category && !baseQuizId && !quizAnswer) return;
-    postSimilarSingleGrade();
-  }, [category, baseQuizId, quizAnswer]);
-
   if (!quiz) return <div>로딩중...</div>;
 
-  return (
+  return isLoading ? (
+    <div>로딩 중...</div>
+  ) : error ? (
+    <div>에러가 발생하였습니다.</div>
+  ) : data && quiz ? (
     <div className="w-full min-h-screen flex flex-col items-center justify-start">
       <div className="w-full px-4 pt-6 pb-40 flex items-center justify-between bg-main rounded-xl">
         <TitleBar
@@ -93,14 +88,16 @@ const SimilarExplainPage = () => {
         <div className="w-full pt-6">
           <PrimaryButton
             text="다른 유사문제 생성하기"
-            onClick={() => navigate('/similar', { state: { category: category, id: baseQuizId } })}
+            onClick={() => navigate('/similar', { state: { category: category, id: data.data.result.baseQuizId } })}
             isAble={true}
           />
         </div>
         <Footer />
       </div>
     </div>
+  ) : (
+    <div>데이터가 없습니다.</div>
   );
 };
 
-export default SimilarExplainPage;
+export default SimilarExplainRecordPage;
