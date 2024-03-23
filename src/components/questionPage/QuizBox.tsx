@@ -1,8 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { QuizType } from '../../data/type';
 import { categoryEngToKor } from '../../data/variable';
 import ExampleBox from './ExampleBox';
 import ChoiceItem from './ChoiceItem';
+import { useMutation } from 'react-query';
+import { postSingleGradeApi } from '../../api/quizApi';
+import { getMemberId } from '../../api/localStorage';
+import ExplainBox from '../explainPage/ExplainBox';
 
 const QuizBox = ({
   quiz,
@@ -21,64 +25,105 @@ const QuizBox = ({
   selected: number | null;
   setSelected: (selected: number | null) => void;
 }) => {
+  // console.log(type);
+  const memberId = getMemberId() || '';
+  const [realType, setRealType] = useState<'quiz' | 'true' | 'false' | 'similar'>(type);
+  const [realUserAnswer, setRealUserAnswer] = useState<number | undefined>(userAnswer);
+  const [realCorrectAnswer, setRealCorrectAnswer] = useState<number | undefined>(correctAnswer);
+  const [explain, setExplain] = useState<{ explain: string; total: number; person: number; percent: number } | null>(
+    null,
+  );
+  const { mutate: postSingleGrade } = useMutation(
+    () => postSingleGradeApi(memberId, quiz.id, selected || 0, quiz.category),
+    {
+      onSuccess: (data) => {
+        console.log(data);
+        setSelected(null);
+        setRealType(data.data.result.isCorrect ? 'true' : 'false');
+        setRealUserAnswer(data.data.result.userChoice);
+        setRealCorrectAnswer(data.data.result.answer);
+        setExplain({
+          explain: data.data.result.solution,
+          total: data.data.result.quizParticipantsCounts,
+          person: data.data.result.correctAnswerCounts,
+          percent: data.data.result.ratioOfCorrect,
+        });
+        setIsAbleToNext(true);
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    },
+  );
+
   useEffect(() => {
     if (selected !== null) {
       setIsAbleToNext(true);
-    } else {
+    } else if (explain === null) {
       setIsAbleToNext(false);
     }
   }, [selected]);
 
   useEffect(() => {
     setSelected(null);
-    // console.log('QUIZ BOX', quiz);
-    // console.log('QUIZ BOX', userAnswer, correctAnswer);
+    setExplain(null);
+    setRealType(type);
+    if (type === 'quiz') {
+      setRealUserAnswer(undefined);
+      setRealCorrectAnswer(undefined);
+    }
   }, [quiz]);
+
+  const singleGradeHandler = () => {
+    if (selected === null || type !== 'quiz') return;
+    postSingleGrade();
+  };
 
   return (
     <div className="w-full flex flex-col items-center justify-start">
       <div className="w-full bg-white border border-sub_200 rounded-lg px-4 py-7 flex flex-col items-center justify-start z-10">
         <div className="w-full flex items-center justify-between">
-          <div className="text-gray_400 font-semibole">{categoryEngToKor[quiz.category]}영역</div>
-          {type !== 'similar' && (
+          <div className="text-gray_400 font-semibold">{categoryEngToKor[quiz.category]}영역</div>
+          {realType !== 'similar' && (
             <div
+              onClick={singleGradeHandler}
               className={`text-10 font-bold leading-normal py-[5px] px-[12px] text-white rounded cursor-pointer ${
                 selected !== null
                   ? 'bg-main'
-                  : type === 'true'
+                  : realType === 'true'
                     ? 'bg-[#80F756] border border-solid border-[#80F756]'
-                    : type === 'false'
+                    : realType === 'false'
                       ? 'bg-[#FF5C5C] border border-solid border-[#FF5C5C]'
-                      : 'hidden'
+                      : 'bg-sub_100'
               }`}
             >
-              {type === 'quiz' ? '해당 문제 채점' : type === 'true' ? '정답입니다!' : '오답입니다!'}
+              {realType === 'quiz' ? '해당 문제 채점' : realType === 'true' ? '정답입니다!' : '오답입니다!'}
             </div>
           )}
         </div>
         <div className="w-full flex flex-col items-start justify-start mt-2">
           <div className="text-main text-20 font-semibold">{`Q${quiz.quizNum}.`}</div>
           <div className="text-black text-16 font-bold mt-2">{quiz.title}</div>
-          <ExampleBox text={quiz.example} />
+          {quiz.example !== 'X' && <ExampleBox text={quiz.example} />}
         </div>
         <div className="w-full flex flex-col justify-center items-center gap-y-3 pt-7">
-          {userAnswer !== undefined && correctAnswer !== undefined ? (
+          {realUserAnswer !== undefined && realCorrectAnswer !== undefined ? (
             <>
               {quiz.choiceFirst !== 'X' && (
                 <ChoiceItem
                   key={1}
                   order={1}
                   text={quiz.choiceFirst}
-                  isSelected={userAnswer === 1 || correctAnswer === 1}
+                  isSelected={realUserAnswer === 1 || realCorrectAnswer === 1}
                   onSelected={() => {}}
                   bgColor={
-                    userAnswer === correctAnswer
-                      ? userAnswer === 1
+                    realUserAnswer === realCorrectAnswer
+                      ? realUserAnswer === 1
                         ? 'true'
                         : 'quiz'
-                      : userAnswer === 1
+                      : realUserAnswer === 1
                         ? 'false'
-                        : correctAnswer === 1
+                        : realCorrectAnswer === 1
                           ? 'true'
                           : 'quiz'
                   }
@@ -89,16 +134,16 @@ const QuizBox = ({
                   key={2}
                   order={2}
                   text={quiz.choiceSecond}
-                  isSelected={userAnswer === 2 || correctAnswer === 2}
+                  isSelected={realUserAnswer === 2 || realCorrectAnswer === 2}
                   onSelected={() => {}}
                   bgColor={
-                    userAnswer === correctAnswer
-                      ? userAnswer === 2
+                    realUserAnswer === realCorrectAnswer
+                      ? realUserAnswer === 2
                         ? 'true'
                         : 'quiz'
-                      : userAnswer === 2
+                      : realUserAnswer === 2
                         ? 'false'
-                        : correctAnswer === 2
+                        : realCorrectAnswer === 2
                           ? 'true'
                           : 'quiz'
                   }
@@ -109,16 +154,16 @@ const QuizBox = ({
                   key={3}
                   order={3}
                   text={quiz.choiceThird}
-                  isSelected={userAnswer === 3 || correctAnswer === 3}
+                  isSelected={realUserAnswer === 3 || realCorrectAnswer === 3}
                   onSelected={() => {}}
                   bgColor={
-                    userAnswer === correctAnswer
-                      ? userAnswer === 3
+                    realUserAnswer === realCorrectAnswer
+                      ? realUserAnswer === 3
                         ? 'true'
                         : 'quiz'
-                      : userAnswer === 3
+                      : realUserAnswer === 3
                         ? 'false'
-                        : correctAnswer === 3
+                        : realCorrectAnswer === 3
                           ? 'true'
                           : 'quiz'
                   }
@@ -129,16 +174,16 @@ const QuizBox = ({
                   key={4}
                   order={4}
                   text={quiz.choiceFourth}
-                  isSelected={userAnswer === 4 || correctAnswer === 4}
+                  isSelected={realUserAnswer === 4 || realCorrectAnswer === 4}
                   onSelected={() => {}}
                   bgColor={
-                    userAnswer === correctAnswer
-                      ? userAnswer === 4
+                    realUserAnswer === realCorrectAnswer
+                      ? realUserAnswer === 4
                         ? 'true'
                         : 'quiz'
-                      : userAnswer === 4
+                      : realUserAnswer === 4
                         ? 'false'
-                        : correctAnswer === 4
+                        : realCorrectAnswer === 4
                           ? 'true'
                           : 'quiz'
                   }
@@ -149,16 +194,16 @@ const QuizBox = ({
                   key={5}
                   order={5}
                   text={quiz.choiceFifth}
-                  isSelected={userAnswer === 5 || correctAnswer === 5}
+                  isSelected={realUserAnswer === 5 || realCorrectAnswer === 5}
                   onSelected={() => {}}
                   bgColor={
-                    userAnswer === correctAnswer
-                      ? userAnswer === 5
+                    realUserAnswer === realCorrectAnswer
+                      ? realUserAnswer === 5
                         ? 'true'
                         : 'quiz'
-                      : userAnswer === 5
+                      : realUserAnswer === 5
                         ? 'false'
-                        : correctAnswer === 5
+                        : realCorrectAnswer === 5
                           ? 'true'
                           : 'quiz'
                   }
@@ -229,6 +274,15 @@ const QuizBox = ({
           <div className="bg-[#9C61F7] rounded-b-lg w-full h-full blur-xs" />
         </div>
       </div>
+      {explain && (
+        <div className="mt-6 w-full flex flex-col items-center justify-start gap-y-2">
+          <div className="w-full flex items-center justify-between">
+            <div className="text-12 text-gray_400 text-light">{`${explain.total}명 중 ${explain.person}명이 맞췄어요 😊`}</div>
+            <div className="text-10 text-gray_300 text-light">{`정답률 ${explain.percent}%`}</div>
+          </div>
+          <ExplainBox text={explain.explain} />
+        </div>
+      )}
     </div>
   );
 };

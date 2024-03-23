@@ -5,10 +5,8 @@ import AbledButton from '../common/AbledButton';
 import { useMutation } from 'react-query';
 import { tempLoginApi } from '../../api/userApi';
 import { setMemberId, setMemberNickname } from '../../api/localStorage';
-import { useNavigate } from 'react-router-dom';
 
 const LogoutPage = () => {
-  const navigate = useNavigate();
   const [id, setId] = useState('');
   const slideRef = useRef<HTMLDivElement>(null);
   const [slideIndex, setSlideIndex] = useState(0);
@@ -17,8 +15,8 @@ const LogoutPage = () => {
     onSuccess: (data) => {
       console.log(data);
       setMemberId(data.data.result.id);
-      setMemberNickname(data.data.result.entryCode);
-      navigate('/');
+      setMemberNickname(data.data.result.nickname);
+      location.reload();
     },
     onError: (error) => {
       console.log(error);

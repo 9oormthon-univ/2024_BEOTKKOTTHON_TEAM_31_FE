@@ -3,10 +3,12 @@ import { ReactComponent as Snack } from '../../assets/illust/illust_snack.svg';
 import { useNavigate } from 'react-router-dom';
 import { CategoryType } from '../../data/type';
 
-const Popup = ({ category }: { category: CategoryType }) => {
+const Popup = ({ isVisible, category }: { isVisible: boolean; category: CategoryType }) => {
   const navigate = useNavigate();
   return (
-    <div className="fixed w-full h-screen overflow-hidden top-0 left-0 flex items-center justify-center bg-black/50">
+    <div
+      className={`fixed w-full h-screen overflow-hidden top-0 left-0 flex items-center justify-center bg-black/50 ${!isVisible && 'hidden'}`}
+    >
       <div className="px-10 py-6 rounded bg-white flex flex-col items-center justify-center gap-y-4">
         <div className="w-full flex flex-col items-center justify-center">
           <Snack className="sm:w-7 md:w-8 lg:w-9 h-auto" />

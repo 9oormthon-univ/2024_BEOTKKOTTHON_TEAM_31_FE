@@ -11,14 +11,14 @@ import { getMemberId, getMemberNickname } from './api/localStorage';
 import SimilarPage from './pages/SimilarPage';
 import SimilarExplainPage from './pages/SimilarExplainPage';
 import SimilarGradePage from './pages/SimilarGradePage';
+import SimilarExplainRecordPage from './pages/SimilarExplainRecord';
 
 function App() {
   const queryClient = new QueryClient();
+  const memberId = getMemberId() || '';
+  const memberNickname = getMemberNickname();
 
   useEffect(() => {
-    const memberId = getMemberId();
-    const memberNickname = getMemberNickname();
-
     if ((memberId === null || memberNickname === null) && window.location.pathname !== '/') {
       window.location.href = '/';
     }
@@ -30,14 +30,14 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={<MainPage />} />
-            <Route path="/retry" element={<RetryPage />} />
-            <Route path="/question" element={<QuestionPage />} />
+            <Route path="/retry" element={<RetryPage memberId={memberId} />} />
+            <Route path="/question" element={<QuestionPage memberId={memberId} />} />
             <Route path="/grade" element={<GradePage />} />
-            <Route path="/explain/:quizId" element={<ExplainPage />} />
+            <Route path="/explain/:category/:quizId" element={<ExplainPage memberId={memberId} />} />
             <Route path="/similar" element={<SimilarPage />} />
             <Route path="/similar/explain" element={<SimilarExplainPage />} />
-            <Route path="/similar/grade/:category" element={<SimilarGradePage />} />
-            <Route path="/similar/grade/:category/:id" element={<SimilarExplainPage />} />
+            <Route path="/similar/explain/:category/:id" element={<SimilarExplainRecordPage />} />
+            <Route path="/similar/grade/:category/:baseQuizId" element={<SimilarGradePage />} />
           </Routes>
         </Router>
       </QueryClientProvider>

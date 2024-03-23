@@ -9,7 +9,7 @@ export type CategoryItemType = {
 export type CategoryListType = Record<CategoryType, CategoryItemType>;
 
 export type QuizType = {
-  quizId: number;
+  id: number;
   quizNum: number;
   category: CategoryType;
   choiceFirst: string;
@@ -21,10 +21,25 @@ export type QuizType = {
   title: string;
 };
 
-export type WrongQuizItemType = {
-  quizId: number;
+export type QuizAnswerType = {
+  quizNum: number;
+  category: CategoryType;
+  isSimilar: boolean;
+  choice: number;
   title: string;
-  didSimilar: boolean;
+  example: string;
+  choiceFirst: string;
+  choiceSecond: string;
+  choiceThird: string;
+  choiceFourth: string;
+  choiceFifth: string;
+  answer: number;
+  solution: string;
+};
+
+export type WrongQuizItemType = {
+  id: number;
+  quizNum: number;
 };
 
 export type ChoiceType = {
@@ -33,9 +48,8 @@ export type ChoiceType = {
 };
 
 export type GradeItemType = {
-  category: CategoryType;
-  quizId: number;
-  title: string;
+  id: number;
+  quizNum: number;
   isCorrect: boolean;
 };
 
@@ -52,6 +66,5 @@ export type ExplainItemType = {
 export type GradeRequestItemType = {
   id: number;
   category: CategoryType;
-  isSimilar: boolean;
   choice: number;
 };

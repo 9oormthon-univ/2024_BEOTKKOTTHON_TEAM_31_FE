@@ -24,6 +24,19 @@ const ChoiceItem = ({
   bgColor: string;
 }) => {
   // console.log('ChoiceItem', order, text, isSelected, bgColor);
+  const makeUnderline = (srt: string) => {
+    const arr = srt.split('*');
+
+    return arr.length === 1 ? (
+      <div className={`grow text-14 font-semibold ${isSelected ? 'text-white' : 'text-gray_600'}`}>{arr[0]}</div>
+    ) : (
+      <div className={`grow text-14 font-semibold ${isSelected ? 'text-white' : 'text-gray_600'}`}>
+        {arr[0]}
+        <span className="underline">{arr[1]}</span>
+        {arr[2]}
+      </div>
+    );
+  };
   return (
     <div
       className={`w-full p-4 flex items-center justify-start gap-x-10 rounded-lgx cursor-pointer ${
@@ -62,7 +75,7 @@ const ChoiceItem = ({
       ) : (
         <Num5 className="w-4 h-auto" />
       )}
-      <div className={`grow text-14 font-semibold ${isSelected ? 'text-white' : 'text-gray_600'}`}>{text}</div>
+      {makeUnderline(text)}
     </div>
   );
 };

@@ -5,26 +5,31 @@ import CategorySquare from '../components/retryPage/CategorySquare';
 import WrongQuestion from '../components/retryPage/WrongQuestion';
 import Footer from '../components/common/Footer';
 import { CategoryType, WrongQuizItemType } from '../data/type';
-import { dummyWrongQuizItems } from '../data/variable';
+import { useQuery } from 'react-query';
+import { getWrongQuizListApi } from '../api/quizApi';
 
-const RetryPage = () => {
+const RetryPage = ({ memberId }: { memberId: string }) => {
   const [clickedCategory, setClickedCategory] = useState<CategoryType>('LANG');
-  const [wrongList, setWrongList] = useState<WrongQuizItemType[] | null>(null);
+  const { data, isLoading, error, refetch } = useQuery(
+    'wrongQuizList',
+    () => getWrongQuizListApi(memberId, clickedCategory),
+    {
+      onSuccess: (data) => {
+        console.log(data);
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+      enabled: false,
+    },
+  );
 
   useEffect(() => {
-    setWrongList(dummyWrongQuizItems);
-  }, []);
-
-  useEffect(() => {
-    if (!clickedCategory) return;
-    if (clickedCategory === 'SPATIAL') {
-      setWrongList(null);
-    }
-    console.log(clickedCategory);
+    refetch();
   }, [clickedCategory]);
 
   return (
-    <div className="w-full flex flex-col items-center justify-start">
+    <div className="w-full min-h-screen flex flex-col items-center justify-start">
       <div className="w-full bg-main py-6 px-4 rounded-b-xl flex flex-col items-center justify-start">
         <TitleBar text="내가 틀린 문제" isPrev={true} isHome={false} />
         <div className="flex items-center justify-between w-full">
@@ -64,21 +69,29 @@ const RetryPage = () => {
         />
         <CategorySquare category="SPATIAL" isClicked={clickedCategory === 'SPATIAL'} onClick={() => {}} />
       </div>
-      <div className="w-full pt-2 pb-6 px-4 flex flex-col gap-y-4">
-        {wrongList === null ? (
-          <div>틀린 문제가 없습니다,</div>
+      <div className="w-full grow pt-2 pb-6 px-4 flex flex-col gap-y-4">
+        {isLoading ? (
+          <div>로딩 중...</div>
+        ) : error ? (
+          <div>에러가 발생하였습니다.</div>
+        ) : data ? (
+          data.data.result.length === 0 ? (
+            <div className="w-full grow flex items-center justify-center">아직 틀린 문제가 없어요!</div>
+          ) : (
+            data.data.result.map((item: WrongQuizItemType, idx: number) => {
+              return (
+                <WrongQuestion
+                  key={idx}
+                  id={item.id}
+                  quizNum={item.quizNum}
+                  category={clickedCategory}
+                  didSimilar={true}
+                />
+              );
+            })
+          )
         ) : (
-          wrongList.map((item, idx) => {
-            return (
-              <WrongQuestion
-                key={idx}
-                id={item.quizId}
-                title={item.title}
-                didSimilar={item.didSimilar}
-                category={clickedCategory}
-              />
-            );
-          })
+          <div>데이터 없음</div>
         )}
       </div>
       <Footer />
