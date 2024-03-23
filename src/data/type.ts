@@ -21,6 +21,12 @@ export type QuizType = {
   title: string;
 };
 
+export type WrongQuizItemType = {
+  quizId: number;
+  title: string;
+  didSimilar: boolean;
+};
+
 export type ChoiceType = {
   num: number;
   content: string;

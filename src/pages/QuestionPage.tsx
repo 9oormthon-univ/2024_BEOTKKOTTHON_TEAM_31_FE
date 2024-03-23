@@ -50,8 +50,6 @@ const QuestionPage = () => {
 
   useEffect(() => {
     if (data) {
-      // console.log('데이터입니다');
-      // console.log(data);
       setQuizList(data.data.result.quizzes);
     }
   }, [data]);

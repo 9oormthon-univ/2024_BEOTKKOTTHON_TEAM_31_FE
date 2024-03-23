@@ -15,7 +15,7 @@ const QuizBox = ({
 }: {
   quiz: QuizType;
   setIsAbleToNext: (isAble: boolean) => void;
-  type: 'quiz' | 'true' | 'false';
+  type: 'quiz' | 'true' | 'false' | 'similar';
   userAnswer?: number;
   correctAnswer?: number;
   selected: number | null;
@@ -40,22 +40,24 @@ const QuizBox = ({
       <div className="w-full bg-white border border-sub_200 rounded-lg px-4 py-7 flex flex-col items-center justify-start z-10">
         <div className="w-full flex items-center justify-between">
           <div className="text-gray_400 font-semibole">{categoryEngToKor[quiz.category]}영역</div>
-          <div
-            className={`text-10 font-bold leading-normal py-[5px] px-[12px] text-white rounded ${
-              selected !== null
-                ? 'bg-main'
-                : type === 'true'
-                  ? 'bg-[#80F756] border border-solid border-[#80F756]'
-                  : type === 'false'
-                    ? 'bg-[#FF5C5C] border border-solid border-[#FF5C5C]'
-                    : 'bg-sub_100'
-            }`}
-          >
-            {type === 'quiz' ? '해당 문제 채점' : type === 'true' ? '정답입니다!' : '오답입니다!'}
-          </div>
+          {type !== 'similar' && (
+            <div
+              className={`text-10 font-bold leading-normal py-[5px] px-[12px] text-white rounded cursor-pointer ${
+                selected !== null
+                  ? 'bg-main'
+                  : type === 'true'
+                    ? 'bg-[#80F756] border border-solid border-[#80F756]'
+                    : type === 'false'
+                      ? 'bg-[#FF5C5C] border border-solid border-[#FF5C5C]'
+                      : 'hidden'
+              }`}
+            >
+              {type === 'quiz' ? '해당 문제 채점' : type === 'true' ? '정답입니다!' : '오답입니다!'}
+            </div>
+          )}
         </div>
         <div className="w-full flex flex-col items-start justify-start mt-2">
-          <div className="text-main text-20 font-semibold">{`Q${quiz.quizNum}`}</div>
+          <div className="text-main text-20 font-semibold">{`Q${quiz.quizNum}.`}</div>
           <div className="text-black text-16 font-bold mt-2">{quiz.title}</div>
           <ExampleBox text={quiz.example} />
         </div>

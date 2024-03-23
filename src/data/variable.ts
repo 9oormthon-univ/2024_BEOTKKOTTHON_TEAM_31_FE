@@ -1,4 +1,4 @@
-import { GradeItemType, QuizType } from './type';
+import { GradeItemType, QuizType, WrongQuizItemType } from './type';
 
 export const categoryKorToEng = {
   언어: 'LANG',
@@ -106,3 +106,31 @@ export const dummyIncorrectExplain = {
   explain:
     '제시문은 상하 관계를 나타낸다. 중학생은 학생에 포함되며 전철은 대중교통에 포함된다. 따라서 학생 : 중학생 = 대중교통 : 전철이 답이다.',
 };
+
+export const dummyWrongQuizItems: WrongQuizItemType[] = [
+  {
+    quizId: 2,
+    title: '2번 문제',
+    didSimilar: true,
+  },
+  {
+    quizId: 5,
+    title: '5번 문제',
+    didSimilar: false,
+  },
+  {
+    quizId: 6,
+    title: '6번 문제',
+    didSimilar: true,
+  },
+  {
+    quizId: 7,
+    title: '7번 문제',
+    didSimilar: false,
+  },
+  {
+    quizId: 9,
+    title: '9번 문제',
+    didSimilar: true,
+  },
+];

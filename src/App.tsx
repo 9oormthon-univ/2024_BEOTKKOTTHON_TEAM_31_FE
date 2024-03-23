@@ -8,6 +8,9 @@ import GradePage from './pages/GradePage';
 import ExplainPage from './pages/ExplainPage';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { getMemberId, getMemberNickname } from './api/localStorage';
+import SimilarPage from './pages/SimilarPage';
+import SimilarExplainPage from './pages/SimilarExplainPage';
+import SimilarGradePage from './pages/SimilarGradePage';
 
 function App() {
   const queryClient = new QueryClient();
@@ -31,6 +34,10 @@ function App() {
             <Route path="/question" element={<QuestionPage />} />
             <Route path="/grade" element={<GradePage />} />
             <Route path="/explain/:quizId" element={<ExplainPage />} />
+            <Route path="/similar" element={<SimilarPage />} />
+            <Route path="/similar/explain" element={<SimilarExplainPage />} />
+            <Route path="/similar/grade/:category" element={<SimilarGradePage />} />
+            <Route path="/similar/grade/:category/:id" element={<SimilarExplainPage />} />
           </Routes>
         </Router>
       </QueryClientProvider>

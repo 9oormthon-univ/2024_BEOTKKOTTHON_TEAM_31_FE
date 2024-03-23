@@ -1,12 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TitleBar from '../components/common/TitleBar';
 import { ReactComponent as RetryBooks } from '../assets/illust/illust_retry_books.svg';
 import CategorySquare from '../components/retryPage/CategorySquare';
 import WrongQuestion from '../components/retryPage/WrongQuestion';
 import Footer from '../components/common/Footer';
+import { CategoryType, WrongQuizItemType } from '../data/type';
+import { dummyWrongQuizItems } from '../data/variable';
 
 const RetryPage = () => {
-  const [clickedCategory, setClickedCategory] = useState<'language' | 'math' | 'reasoning' | 'space'>('language');
+  const [clickedCategory, setClickedCategory] = useState<CategoryType>('LANG');
+  const [wrongList, setWrongList] = useState<WrongQuizItemType[] | null>(null);
+
+  useEffect(() => {
+    setWrongList(dummyWrongQuizItems);
+  }, []);
+
+  useEffect(() => {
+    if (!clickedCategory) return;
+    if (clickedCategory === 'SPATIAL') {
+      setWrongList(null);
+    }
+    console.log(clickedCategory);
+  }, [clickedCategory]);
+
   return (
     <div className="w-full flex flex-col items-center justify-start">
       <div className="w-full bg-main py-6 px-4 rounded-b-xl flex flex-col items-center justify-start">
@@ -26,40 +42,44 @@ const RetryPage = () => {
       </div>
       <div className="w-full flex gap-x-2 p-4">
         <CategorySquare
-          category="language"
-          isClicked={clickedCategory === 'language'}
+          category="LANG"
+          isClicked={clickedCategory === 'LANG'}
           onClick={() => {
-            setClickedCategory('language');
+            setClickedCategory('LANG');
           }}
         />
         <CategorySquare
-          category="math"
-          isClicked={clickedCategory === 'math'}
+          category="MATH"
+          isClicked={clickedCategory === 'MATH'}
           onClick={() => {
-            setClickedCategory('math');
+            setClickedCategory('MATH');
           }}
         />
         <CategorySquare
-          category="reasoning"
-          isClicked={clickedCategory === 'reasoning'}
+          category="DEDUCE"
+          isClicked={clickedCategory === 'DEDUCE'}
           onClick={() => {
-            setClickedCategory('reasoning');
+            setClickedCategory('DEDUCE');
           }}
         />
-        <CategorySquare
-          category="space"
-          isClicked={clickedCategory === 'space'}
-          onClick={() => {
-            setClickedCategory('space');
-          }}
-        />
+        <CategorySquare category="SPATIAL" isClicked={clickedCategory === 'SPATIAL'} onClick={() => {}} />
       </div>
       <div className="w-full pt-2 pb-6 px-4 flex flex-col gap-y-4">
-        <WrongQuestion id={2} title="2번 문제" />
-        <WrongQuestion id={5} title="5번 문제" />
-        <WrongQuestion id={6} title="6번 문제" />
-        <WrongQuestion id={7} title="7번 문제" />
-        <WrongQuestion id={9} title="9번 문제" />
+        {wrongList === null ? (
+          <div>틀린 문제가 없습니다,</div>
+        ) : (
+          wrongList.map((item, idx) => {
+            return (
+              <WrongQuestion
+                key={idx}
+                id={item.quizId}
+                title={item.title}
+                didSimilar={item.didSimilar}
+                category={clickedCategory}
+              />
+            );
+          })
+        )}
       </div>
       <Footer />
     </div>
