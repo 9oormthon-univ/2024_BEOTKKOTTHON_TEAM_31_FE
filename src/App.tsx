@@ -1,34 +1,39 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import MainPage from './pages/MainPage';
 import RetryPage from './pages/RetryPage';
 import QuestionPage from './pages/QuestionPage';
-import AnswerPage from './pages/AnswerPage';
-import ResultPage from './pages/ResultPage';
-import SimilarPage from './pages/SimilarPage';
-import SimilarQuestionPage from './pages/SimilarQuestionPage';
-import SimilarAnswerPage from './pages/SimilarAnswerPage';
-import ResultAnswerPage from './pages/ResultAnswerPage';
-import SimilarAnswerDonePage from './pages/SimilarAnswerDonePage';
+import GradePage from './pages/GradePage';
+import ExplainPage from './pages/ExplainPage';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { getMemberId, getMemberNickname } from './api/localStorage';
 
 function App() {
+  const queryClient = new QueryClient();
+
+  useEffect(() => {
+    const memberId = getMemberId();
+    const memberNickname = getMemberNickname();
+
+    if ((memberId === null || memberNickname === null) && window.location.pathname !== '/') {
+      window.location.href = '/';
+    }
+  }, []);
+
   return (
     <RecoilRoot>
-      <Router>
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/retry" element={<RetryPage />} />
-          <Route path="/question" element={<QuestionPage />} />
-          <Route path="/answer" element={<AnswerPage />} />
-          <Route path="/result" element={<ResultPage />} />
-          <Route path="/similar" element={<SimilarPage />} />
-          <Route path="/similar-question" element={<SimilarQuestionPage />} />
-          <Route path="/similar-answer" element={<SimilarAnswerPage />} />
-          <Route path="/result-answer" element={<ResultAnswerPage />} />
-          <Route path="/similar-answer-done" element={<SimilarAnswerDonePage />} />
-        </Routes>
-      </Router>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/retry" element={<RetryPage />} />
+            <Route path="/question" element={<QuestionPage />} />
+            <Route path="/grade" element={<GradePage />} />
+            <Route path="/explain/:quizId" element={<ExplainPage />} />
+          </Routes>
+        </Router>
+      </QueryClientProvider>
     </RecoilRoot>
   );
 }

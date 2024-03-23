@@ -10,7 +10,7 @@ const RetryPage = () => {
   return (
     <div className="w-full flex flex-col items-center justify-start">
       <div className="w-full bg-main py-6 px-4 rounded-b-xl flex flex-col items-center justify-start">
-        <TitleBar text="내가 틀린 문제" />
+        <TitleBar text="내가 틀린 문제" isPrev={true} isHome={false} />
         <div className="flex items-center justify-between w-full">
           <div className="flex flex-col gap-y-4 text-white">
             <div className="flex flex-col gap-y-0.5">

@@ -2,22 +2,15 @@ import { ReactComponent as Github } from '../../assets/illust/illust_github.svg'
 
 const Footer = () => {
   return (
-    <>
-      <div className="w-full mt-6">
-        <div className="mx-5 border-[1px] border-gray_300 opacity-50"></div>
-      </div>
-      <div className="mb-6 w-full">
-        <div className="relative mx-5 flex h-[104.5px] items-center justify-start whitespace-pre text-wrap font-[SongMyung] text-12 font-medium leading-[21px] text-gray_400 ">
-          {`@BRAINSNACK. All rights Reserved. \n구름톤 유니브. 벚꽃톤 팀 “BRAINSNACK”`}
-          <div className="absolute bottom-0 left-0">
-            <Github
-              className="cursor-pointer"
-              onClick={() => window.open('https://github.com/goormthon-Univ/2024_BEOTKKOTTHON_TEAM_31_FE')}
-            />
-          </div>
+    <div className="w-full flex flex-col items-center justify-start py-7">
+      <div className="w-full flex flex-col items-center justify-start border-t border-solid border-gray_300 bg-gray_400 h-px " />
+      <div className="w-full flex flex-col items-start justify-start gap-y-4 py-7">
+        <div className="text-12 text-gray_400 font-medium whitespace-pre-line">{`@BRAINSNACK. All rights Reserved.\n구름톤 유니브. 벚꽃톤 팀 “BRAINSNACK”`}</div>
+        <div className="w-4 h-auto">
+          <Github className="w-full h-auto" />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -2,11 +2,28 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ReactComponent as Logo } from '../../assets/logo/logo_original.svg';
 import DisabledButton from '../common/DisabledButton';
 import AbledButton from '../common/AbledButton';
+import { useMutation } from 'react-query';
+import { tempLoginApi } from '../../api/userApi';
+import { setMemberId, setMemberNickname } from '../../api/localStorage';
+import { useNavigate } from 'react-router-dom';
 
 const LogoutPage = () => {
+  const navigate = useNavigate();
   const [id, setId] = useState('');
   const slideRef = useRef<HTMLDivElement>(null);
   const [slideIndex, setSlideIndex] = useState(0);
+
+  const { mutate: tempLogin } = useMutation(() => tempLoginApi(id), {
+    onSuccess: (data) => {
+      console.log(data);
+      setMemberId(data.data.result.id);
+      setMemberNickname(data.data.result.entryCode);
+      navigate('/');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -47,7 +64,12 @@ const LogoutPage = () => {
         {id === '' ? (
           <DisabledButton text="서비스 시작하기" />
         ) : (
-          <AbledButton text="서비스 시작하기" onClick={() => {}} />
+          <AbledButton
+            text="서비스 시작하기"
+            onClick={() => {
+              tempLogin();
+            }}
+          />
         )}
       </div>
       <div className="mx-4 mt-[24px] w-full">

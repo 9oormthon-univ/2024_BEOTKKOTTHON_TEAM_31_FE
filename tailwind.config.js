@@ -8,7 +8,7 @@ module.exports = {
       DEFAULT: '0.25rem',
       md: '0.375rem',
       lg: '0.5rem',
-      lgx: '0.625rem',
+      lgx: '0.625rem', //10px
       xl: '0.75rem',
       '2xl': '1rem',
       '3xl': '1.5rem',
@@ -19,7 +19,9 @@ module.exports = {
       fontSize: {
         10: '0.625rem',
         12: '0.75rem',
+        13: '0.8125rem', //13px
         14: '0.875rem',
+        15: '0.9375rem', //15px
         16: '1rem',
         18: '1.125rem',
         20: '1.25rem',
@@ -57,6 +59,10 @@ module.exports = {
         sm: { min: '250px', max: '390px' },
         md: { min: '391px', max: '767px' },
         lg: { min: '768px' },
+      },
+      blur: {
+        xs: '2px',
+        sm: '4px',
       },
     },
   },
