@@ -5,56 +5,49 @@ import { ReactComponent as Math } from '../../assets/illust/illust_math.svg';
 import { ReactComponent as MathWjote } from '../../assets/illust/illust_math_white.svg';
 import { ReactComponent as Reasoning } from '../../assets/illust/illust_reasoning.svg';
 import { ReactComponent as ReasoningWjote } from '../../assets/illust/illust_reasoning_white.svg';
-import { ReactComponent as Space } from '../../assets/illust/illust_space.svg';
+// import { ReactComponent as Space } from '../../assets/illust/illust_space.svg';
 import { ReactComponent as SpaceWhite } from '../../assets/illust/illust_space_white.svg';
+import { CategoryType } from '../../data/type';
 
 const CategorySquare = ({
   category,
   isClicked,
   onClick,
 }: {
-  category: string;
+  category: CategoryType;
   isClicked: boolean;
   onClick: () => void;
 }) => {
   return (
     <div
-      className={`grow flex flex-col items-center justify-center gap-y-2.5 px-5 py-4 rounded-lg text-12 font-bold cursor-pointer ${isClicked ? 'bg-main text-white' : 'bg-sub_100 text-main'}`}
+      className={`grow flex flex-col items-center justify-center gap-y-2.5 px-5 py-4 rounded-lg text-12 font-bold cursor-pointer ${category === 'SPATIAL' ? 'cursor-not-allowed bg-sub_100 text-white' : isClicked ? 'bg-main text-white' : 'bg-sub_100 text-main'}`}
       onClick={onClick}
     >
       <div className="w-full px-4 flex items-center justify-center grow">
-        {category === 'language' ? (
+        {category === 'LANG' ? (
           isClicked ? (
             <LanguageWhite className="w-full h-auto" />
           ) : (
             <Language className="w-full h-auto" />
           )
-        ) : category === 'math' ? (
+        ) : category === 'MATH' ? (
           isClicked ? (
             <MathWjote className="w-full h-auto" />
           ) : (
             <Math className="w-full h-auto" />
           )
-        ) : category === 'reasoning' ? (
+        ) : category === 'DEDUCE' ? (
           isClicked ? (
             <ReasoningWjote className="w-full h-auto" />
           ) : (
             <Reasoning className="w-full h-auto" />
           )
-        ) : isClicked ? (
-          <SpaceWhite className="w-full h-auto" />
         ) : (
-          <Space className="w-full h-auto" />
+          <SpaceWhite className="w-full h-auto" />
         )}
       </div>
       <div className="shrink-0">
-        {category === 'language'
-          ? '언어'
-          : category === 'math'
-            ? '수리'
-            : category === 'reasoning'
-              ? '추리'
-              : '공간지각'}
+        {category === 'LANG' ? '언어' : category === 'MATH' ? '수리' : category === 'DEDUCE' ? '추리' : '공간지각'}
         영역
       </div>
     </div>

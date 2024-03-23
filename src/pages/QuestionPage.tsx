@@ -1,274 +1,149 @@
-import num1 from '../assets/illust/illust_num1.svg';
-import num2 from '../assets/illust/illust_num2.svg';
-import num3 from '../assets/illust/illust_num3.svg';
-import num4 from '../assets/illust/illust_num4.svg';
-import num5 from '../assets/illust/illust_num5.svg';
-import { ReactComponent as Num1Selection } from '../assets/illust/illust_num1_selection.svg';
-import { ReactComponent as Num2Selection } from '../assets/illust/illust_num2_selection.svg';
-import { ReactComponent as Num3Selection } from '../assets/illust/illust_num3_selection.svg';
-import { ReactComponent as Num4Selection } from '../assets/illust/illust_num4_selection.svg';
-import { ReactComponent as Num5Selection } from '../assets/illust/illust_num5_selection.svg';
 import { useEffect, useState } from 'react';
+// import Footer from '../components/common/Footer';
+import { useLocation, useNavigate } from 'react-router-dom';
+// import TitleBar from '../components/common/TitleBar';
+// import QuizBox from '../components/questionPage/QuizBox';
+import { GradeRequestItemType, QuizType } from '../data/type';
+// import PrimaryButton from '../components/questionPage/PrimaryButton';
+// import StrokeButton from '../components/questionPage/StrokeButton';
+import { useQuery } from 'react-query';
+import { getQuizListApi } from '../api/quizApi';
+import { dummyQuestions } from '../data/variable';
+import TitleBar from '../components/common/TitleBar';
+import QuizBox from '../components/questionPage/QuizBox';
+import PrimaryButton from '../components/questionPage/PrimaryButton';
+import StrokeButton from '../components/questionPage/StrokeButton';
 import Footer from '../components/common/Footer';
-import { ReactComponent as PrevBtn } from '../assets/illust/illust_prev_btn.svg';
-import { ReactComponent as HomeBtn } from '../assets/illust/illust_home_btn.svg';
-import AbledButton_sm from '../components/common/AbledButton_sm';
-import DisabledButton_sm from '../components/common/DisabledButton_sm';
-import { Link, useNavigate } from 'react-router-dom';
 
 const QuestionPage = () => {
-  const [currentQuiz, setCurrentQuiz] = useState(0);
   const navigate = useNavigate();
-  const [clickedIndex, setClickedIndex] = useState<number | null>(null);
-  const ArrTest = [
-    {
-      domain: '언어영역',
-      questionNum: 1,
-      question: '다음 중 괄호 안에 상응하는 단어로 적합한 것은?',
-      describeState: true,
-      describe: '학생 : 중학생 = ( ) : 전철',
-      selection: [
-        {
-          num: num1,
-          name: '기차',
-        },
-        {
-          num: num2,
-          name: '지하철',
-        },
-        {
-          num: num3,
-          name: '버스',
-        },
-        {
-          num: num4,
-          name: '자동차',
-        },
-        {
-          num: num5,
-          name: '비행기',
-        },
-      ],
-      answer: 2,
-      explanation:
-        '제시문은 상하 관계를 나타낸다. 중학생은 학생에 포함되며 전철은 대중교통에 포함된다. 따라서 학생 : 중학생 = 대중교통 : 전철이 답이다',
-      count: 10,
-      correctCount: 2,
-      wrongCount: 8,
-    },
-    {
-      domain: '언어영역',
-      questionNum: 2,
-      question: '다음 밑줄 친 단어의 의미와 가장 유사한 것은?',
-      describeState: true,
-      describe: '다시 봄이 오니 온 산과 들에 파릇파릇 새 생명이 넘쳐난다.',
-      selection: [
-        {
-          num: num1,
-          name: '다시 건강이 좋아져야지.',
-        },
-        {
-          num: num2,
-          name: '다른 방법으로 다시 한 번 해 봐.',
-        },
-        {
-          num: num3,
-          name: '다시 보아도 틀린 곳을 못 찾겠어.',
-        },
-        {
-          num: num4,
-          name: '웬만큼 쉬었으면 다시 일을 시작합시다.',
-        },
-      ],
-      answer: 1,
-      explanation:
-        '부사 다시의 사전적 의미를 살펴보면, 1. 하던 것을 되풀이해서. 2. 방법이나 방향을 고쳐서 새로이. 3. 하다가 그친 것을 계속하여. 4. 다음에 또. 5. 이전 상태로 또 등이 있다. 제시문을 살펴보면 봄은 순환하므로, 이전 상태로 또의 뜻으로 쓰인 것을 알 수 있다. 이와 유사하게 쓰인 문장은 1번이다. 건강했던 이전 상태로 돌아가는 것이기 때문이다. 2번은 방법이나 방향을 고쳐서 새로이, 3번은 하던 것을 되풀이해서, 4번은 하다가 그친 것을 계속하여에 해당된다.',
-      count: 10,
-      correctCount: 2,
-      wrongCount: 8,
-    },
-  ];
+  const { category } = useLocation().state as { category: string };
+  const [realCategory, setRealCategory] = useState<string>('');
+  const [quizList, setQuizList] = useState<QuizType[]>([]);
+  const [gradeRequestList, setGradeRequestList] = useState<GradeRequestItemType[]>([]);
+  const [currentQuizIdx, setCurrentQuizIdx] = useState(0);
+  const [currentSelectedNum, setCurrentSelectedNum] = useState<number | null>(null);
+  const [isAbleToNext, setIsAbleToNext] = useState(false);
+  const { data, isLoading, error } = useQuery('categoryQuiz', () => getQuizListApi(category), {
+    onError: (error) => console.log(error),
+  });
+
+  const nextWithAdded = () => {
+    const added: GradeRequestItemType = {
+      id: quizList[currentQuizIdx].quizId,
+      category: quizList[currentQuizIdx].category,
+      isSimilar: false,
+      choice: currentSelectedNum!,
+    };
+
+    setGradeRequestList([...gradeRequestList, added]);
+
+    if (currentQuizIdx !== quizList.length - 1) {
+      setCurrentQuizIdx(currentQuizIdx + 1);
+    }
+    console.log('채점용 added ---> ', added);
+  };
 
   useEffect(() => {
-    setClickedIndex(null);
-  }, [currentQuiz]);
-  const handleToggle = (index: number) => {
-    if (clickedIndex === index) {
-      setClickedIndex(null);
+    setRealCategory(category);
+  }, [category]);
+
+  useEffect(() => {
+    if (data) {
+      setQuizList(data.data.result.quizzes);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    console.log('채점용 리스트 ---> ', gradeRequestList);
+    if (quizList.length > 0 && gradeRequestList.length === quizList.length) {
+      navigate('/grade', { state: { category: category, gradeRequestList: gradeRequestList } });
+    }
+  }, [gradeRequestList]);
+
+  useEffect(() => {
+    console.log('채점용 저장 ---> ', gradeRequestList);
+  }, [currentQuizIdx]);
+
+  useEffect(() => {
+    setQuizList(dummyQuestions);
+  }, []);
+
+  useEffect(() => {
+    setCurrentQuizIdx(0);
+    setIsAbleToNext(false);
+    setCurrentSelectedNum(null);
+  }, [quizList]);
+
+  useEffect(() => {
+    isAbleToNext && setIsAbleToNext(false);
+    setCurrentSelectedNum(null);
+  }, [currentQuizIdx]);
+
+  const numberConverter = (num: number) => {
+    if (num < 10) {
+      return `0${num}`;
     } else {
-      setClickedIndex(index);
+      return `${num}`;
     }
   };
-  return (
-    <div className="relative flex h-full w-full flex-col items-center justify-start overflow-hidden font-family">
-      {/* 헤더 */}
-      <div className="flex w-full flex-col items-center justify-start rounded-b-12 bg-main px-[16px] pb-[120px] pt-[24px]">
-        <div className="flex w-full items-center justify-between">
-          <PrevBtn
-            className="shrink-0 cursor-pointer"
-            onClick={() => {
-              currentQuiz === 0 ? navigate(-1) : setCurrentQuiz(currentQuiz - 1);
-            }}
-          />
-          <p className="text-white text-16 font-extrabold pl-[10px]">
-            {ArrTest[currentQuiz].questionNum} of {ArrTest.length}
-          </p>
-          <Link to="/">
-            <HomeBtn className="shrink-0 cursor-pointer" />
-          </Link>
-        </div>
+
+  return isLoading || realCategory === '' ? (
+    <div className="w-full h-full flex items-center justify-center text-20 text-black">
+      <div>로딩 중 ...</div>
+    </div>
+  ) : error ? (
+    <div className="w-full h-full flex items-center justify-center text-20 text-black">
+      <div>에러 발생</div>
+    </div>
+  ) : data ? (
+    <div className="relative w-full flex min-h-full flex-col items-center justify-start">
+      <div className="relative w-full flex flex-col gap-y-7 bg-main rounded-b-xl px-4 pt-7 pb-32">
+        <TitleBar
+          text={`${numberConverter(currentQuizIdx + 1)} of ${data.data.result.size}`}
+          isPrev={true}
+          isHome={true}
+        />
         <div className="w-full mt-6">
-          <div className="relative h-2 bg-white rounded-8 overflow-hidden">
+          <div className="relative h-2 bg-white rounded-lg overflow-hidden">
             <div
-              className="absolute top-0 left-0 h-full bg-[#80F756] rounded-l-8 "
-              style={{ width: `${(ArrTest[currentQuiz].questionNum / ArrTest.length) * 100}%` }}
-            ></div>
+              className={`absolute top-0 left-0 h-full bg-[#80F756] rounded-2`}
+              style={{ width: `${((currentQuizIdx + 1) / data.data.result.size) * 100}%` }}
+            />
           </div>
         </div>
       </div>
-      {/* 문제 박스 영역 */}
-      <div className="w-full h-auto relative" style={{ boxShadow: '2px 4px 10px 0px rgba(72, 74, 100, 0.10)' }}>
-        <div className="mx-4 -mt-[90px] h-auto bg-white flex flex-col justify-center overflow-hidden rounded-12 border-[1px] border-sub_200">
-          {/* 문제 헤더 */}
-          <div className="w-full flex items-start mt-6 mb-0 pr-6 pl-4 justify-between">
-            <div className="text-14 font-semibold text-gray_400 leading-none">{ArrTest[currentQuiz].domain}</div>
-            {clickedIndex !== null ? (
-              <Link to="/answer">
-                <AbledButton_sm text="해당 문제 채점" onClick={() => navigate(`/answer/${clickedIndex}`)} />
-              </Link>
-            ) : (
-              <DisabledButton_sm text="해당 문제 채점" />
-            )}
-          </div>
-          {/* 문제 설명 */}
-          <div className="flex w-full flex-col mt-0 pl-4 leading-none">
-            <div className="text-20 font-semibold text-main">Q{ArrTest[currentQuiz].questionNum}.</div>
-            <div className="text-16 font-semibold text-gray_600 mt-2 pl-[2px]">{ArrTest[currentQuiz].question}</div>
-          </div>
-          {/* 구체적인 문제 */}
-          <div className="flex w-full mt-4 justify-center">
-            <div className="w-auto h-auto px-[75px] py-10 border-[2px] border-sub_300 flex items-center justify-center rounded-[10px] text-gray_500 text-16 font-medium">
-              {ArrTest[currentQuiz].describe}
-            </div>
-          </div>
-          {/* 문제 선택지 */}
-          <div className="w-full my-6">
-            <div className="mx-6 leading-none gap-y-3 flex flex-col justify-center">
-              {ArrTest[currentQuiz].selection.map((item, index) => (
-                <div
-                  key={index}
-                  className={`flex justify-center w-full h-12 items-center rounded-[10px] cursor-pointer ${
-                    clickedIndex === index
-                      ? 'bg-main text-14 font-semibold text-white'
-                      : 'bg-gray-200 text-14 font-semibold text-gray-600'
-                  }`}
-                  onClick={() => handleToggle(index)}
-                >
-                  <div className="flex w-full">
-                    <div className="flex items-center">
-                      {clickedIndex === index ? (
-                        clickedIndex === 0 ? (
-                          <Num1Selection className="mx-4" />
-                        ) : clickedIndex === 1 ? (
-                          <Num2Selection className="mx-4" />
-                        ) : clickedIndex === 2 ? (
-                          <Num3Selection className="mx-4" />
-                        ) : clickedIndex === 3 ? (
-                          <Num4Selection className="mx-4" />
-                        ) : (
-                          <Num5Selection className="mx-4" />
-                        )
-                      ) : (
-                        <img src={item.num} alt="number" className="mx-4" />
-                      )}
-                    </div>
-                    <div>{item.name}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        {/* 그라데이션 푸터 */}
-        <div className="w-full h-4">
-          <div
-            className="mx-8 h-full bg-[#C79CFC] blur-[1px] rounded-b-8 border-none"
-            style={{ boxShadow: '2px 4px 10px 0px rgba(72, 74, 100, 0.10)' }}
-          ></div>
-        </div>
-        <div className="w-full h-4">
-          <div
-            className="mx-12 h-full bg-[#9C61F7] blur-[1px] rounded-b-8 border-none"
-            style={{ boxShadow: '2px 4px 10px 0px rgba(72, 74, 100, 0.10)' }}
-          ></div>
-        </div>
-        {/* 이전, 다음 문제 버튼 */}
-        <div className="w-full mt-6">
-          <div className="mx-4 flex justify-between gap-x-4">
-            {currentQuiz === 0 ? (
-              <>
-                {clickedIndex !== null ? (
-                  <div
-                    className="w-full h-[50px] border-[1px] border-main flex justify-center items-center rounded-8 text-white text-16 font-bold bg-main cursor-pointer"
-                    onClick={() => setCurrentQuiz(currentQuiz + 1)}
-                  >
-                    다음 문제
-                  </div>
-                ) : (
-                  <div className="w-full h-[50px] border-[1px] border-sun_100 flex justify-center items-center rounded-8 text-white text-16 font-bold bg-sub_100">
-                    다음 문제
-                  </div>
-                )}
-              </>
-            ) : currentQuiz > 1 && currentQuiz < ArrTest.length ? (
-              <>
-                <div
-                  className="w-full h-[50px] border-[1px] border-main flex justify-center items-center rounded-8 text-main text-16 font-bold cursor-pointer"
-                  onClick={() => setCurrentQuiz(currentQuiz - 1)}
-                >
-                  이전 문제
-                </div>
-                {clickedIndex !== null ? (
-                  <div
-                    className="w-full h-[50px] border-[1px] border-main flex justify-center items-center rounded-8 text-white text-16 font-bold bg-main cursor-pointer"
-                    onClick={() => setCurrentQuiz(currentQuiz + 1)}
-                  >
-                    다음 문제
-                  </div>
-                ) : (
-                  <div className="w-full h-[50px] border-[1px] border-sun_100 flex justify-center items-center rounded-8 text-white text-16 font-bold bg-sub_100">
-                    다음 문제
-                  </div>
-                )}
-              </>
-            ) : (
-              <>
-                <div
-                  className="w-full h-[50px] border-[1px] border-main flex justify-center items-center rounded-8 text-main text-16 font-bold cursor-pointer"
-                  onClick={() => setCurrentQuiz(currentQuiz - 1)}
-                >
-                  이전 문제
-                </div>
-                {clickedIndex !== null ? (
-                  <Link
-                    to="/result"
-                    className="w-full h-[50px] border-[1px] border-main flex justify-center items-center rounded-8 text-white text-16 font-bold bg-main cursor-pointer"
-                  >
-                    최종 제출
-                  </Link>
-                ) : (
-                  <div className="w-full h-[50px] border-[1px] border-sun_100 flex justify-center items-center rounded-8 text-white text-16 font-bold bg-sub_100">
-                    최종 제출
-                  </div>
-                )}
-              </>
-            )}
-          </div>
-        </div>
+      <div className="relative w-full -translate-y-24 px-4">
+        <QuizBox
+          quiz={quizList[currentQuizIdx]}
+          setIsAbleToNext={setIsAbleToNext}
+          type="quiz"
+          setSelected={setCurrentSelectedNum}
+          selected={currentSelectedNum}
+        />
       </div>
-      {/* 푸터 */}
+      <div className="relative w-full flex items-center justify-center px-4">
+        {currentQuizIdx === 0 ? (
+          <PrimaryButton text="다음 문제" onClick={nextWithAdded} isAble={isAbleToNext} />
+        ) : (
+          <div className="w-full flex items-center justify-center gap-x-4">
+            <StrokeButton
+              text={'이전문제'}
+              onClick={() => setCurrentQuizIdx(currentQuizIdx - 1)}
+              isAble={currentQuizIdx !== 0}
+            />
+            <PrimaryButton
+              text={currentQuizIdx === quizList.length - 1 ? '채점하기' : '다음 문제'}
+              onClick={nextWithAdded}
+              isAble={isAbleToNext}
+            />
+          </div>
+        )}
+      </div>
       <Footer />
     </div>
+  ) : (
+    <div className="w-full h-full flex items-center justify-center">데이터가 없습니다.</div>
   );
 };
 

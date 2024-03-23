@@ -5,40 +5,51 @@ import { ReactComponent as Reasoning } from '../../assets/illust/illust_reasonin
 import { ReactComponent as Space } from '../../assets/illust/illust_space.svg';
 import { ReactComponent as StartBtn } from '../../assets/illust/illust_start_btn.svg';
 import { ReactComponent as UnableStartBtn } from '../../assets/illust/illust_unable_start_btn.svg';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { CategoryListType, CategoryType } from '../../data/type';
 
-function CategoryBox({ type }: { type: number }) {
-  const categoryType: { title: string; description: string; tags: string[] }[] = [
-    {
+function CategoryBox({ type }: { type: CategoryType }) {
+  const navigate = useNavigate();
+
+  const categoryType: CategoryListType = {
+    LANG: {
       title: '언어영역',
       description: '언어 이해력 및 표현 능력 평가',
       tags: ['어휘력', '문법과 구문', '독해 및 추론'],
     },
-    {
+    MATH: {
       title: '수리영역',
       description: '수학적 사고 능력과 문제 해결 능력 평가',
       tags: ['산수', '수치 추론', '대수 및 기하학'],
     },
-    {
+    DEDUCE: {
       title: '추리영역',
       description: '논리적 사고, 분석 능력 및 결론 도출 능력을 평가',
       tags: ['논리 추리', '상황적 추리'],
     },
-    {
+    SPATIAL: {
       title: '공간지각영역',
       description: '공간적 이해와 조작 능력을 평가',
       tags: ['COMING SOON'],
     },
-  ];
+  };
 
   return (
-    <div className="relative flex min-h-[144px] w-full overflow-hidden rounded-8 border border-sub_200">
+    <div
+      onClick={() => {
+        if (type === 'SPATIAL') {
+          return;
+        }
+        navigate(`/question`, { state: { category: type } });
+      }}
+      className={`relative flex min-h-[144px] w-full overflow-hidden rounded-8 border border-sub_200 ${type === 'SPATIAL' ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+    >
       <div className="flex shrink-0 basis-1/3 items-center justify-center bg-sub_200 ">
-        {type === 0 ? (
+        {type === 'LANG' ? (
           <Language className="h-auto w-auto" />
-        ) : type === 1 ? (
+        ) : type === 'MATH' ? (
           <Math className="h-auto w-auto" />
-        ) : type === 2 ? (
+        ) : type === 'DEDUCE' ? (
           <Reasoning className="h-auto w-auto" />
         ) : (
           <Space className="h-auto w-auto" />
@@ -53,12 +64,10 @@ function CategoryBox({ type }: { type: number }) {
               <div className="whitespace-wrap text-10 font-normal">{categoryType[type].description}</div>
             </div>
           </div>
-          {type === 3 ? (
+          {type === 'SPATIAL' ? (
             <UnableStartBtn className="w-[32px] shrink-0" />
           ) : (
-            <Link to="/question" className="w-[32px] shrink-0 cursor-pointer">
-              <StartBtn className="w-full h-full" />
-            </Link>
+            <StartBtn className="w-[32px] h-auto shrink-0 cursor-pointer" />
           )}
         </div>
         <div className="mt-2 box-border flex w-full flex-wrap justify-start gap-x-2 gap-y-2 leading-none">
